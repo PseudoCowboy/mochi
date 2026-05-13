@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>StressPet — Apple Watch</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root{
+    --bg: oklch(97% 0.018 70);
+    --surface: oklch(99% 0.008 70);
+    --ink: oklch(22% 0.02 50);
+    --muted: oklch(50% 0.018 50);
+    --border: oklch(90% 0.014 70);
+    --accent: oklch(64% 0.13 28);
+
+    /* stress palette — kawaii soft */
+    --calm: oklch(78% 0.13 165);     /* mint */
+    --okay: oklch(82% 0.14 95);      /* butter */
+    --stressed: oklch(75% 0.16 50);  /* peach */
+    --over: oklch(68% 0.18 25);      /* coral */
+
+    --font-display: 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --font-body: 'SF Pro Text', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --font-rounded: 'SF Pro Rounded', ui-rounded, -apple-system, system-ui, sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:var(--font-body);
+    background: radial-gradient(1200px 800px at 30% 20%, oklch(95% 0.03 70), var(--bg) 60%);
+    color:var(--ink);
+    min-height:100vh;
+    display:grid;
+    grid-template-columns: 1fr 360px;
+    gap:48px;
+    padding:48px 56px;
+    -webkit-font-smoothing:antialiased;
+  }
+  @media (max-width: 980px){
+    body{grid-template-columns:1fr;padding:24px}
+  }
+
+  /* ── stage ───────────────────────────────────────── */
+  .stage{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:32px;
+    min-height:80vh;
+  }
+  .eyebrow{
+    font-family:var(--font-rounded);
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .stage h1{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:clamp(28px,3.2vw,40px);
+    letter-spacing:-0.02em;
+    line-height:1.1;
+    text-align:center;
+    max-width:18ch;
+  }
+  .stage h1 em{
+    font-style:normal;
+    background: linear-gradient(120deg, var(--accent), oklch(72% 0.14 50));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  /* ── watch frame (Series 10 45mm-ish) ────────────── */
+  .watch{
+    --w: 220px;
+    --h: 264px;
+    width: calc(var(--w) + 16px);
+    position:relative;
+    filter: drop-shadow(0 30px 50px oklch(40% 0.05 50 / 0.18)) drop-shadow(0 4px 8px oklch(40% 0.05 50 / 0.1));
+  }
+  .watch .case{
+    position:relative;
+    width: calc(var(--w) + 16px);
+    height: calc(var(--h) + 16px);
+    border-radius: 56px;
+    background: linear-gradient(160deg, oklch(78% 0.012 70), oklch(58% 0.01 70) 50%, oklch(72% 0.012 70));
+    padding: 8px;
+    box-shadow:
+      inset 0 1px 0 oklch(98% 0.005 70 / 0.6),
+      inset 0 -1px 0 oklch(20% 0.01 70 / 0.4);
+  }
+  .watch .bezel{
+    width:100%; height:100%;
+    border-radius: 48px;
+    background: #000;
+    padding: 10px;
+    position:relative;
+    overflow:hidden;
+  }
+  /* digital crown */
+  .watch .crown{
+    position:absolute;
+    right:-6px; top: 28%;
+    width:10px; height:34px;
+    background: linear-gradient(90deg, oklch(60% 0.01 70), oklch(80% 0.01 70));
+    border-radius:3px;
+  }
+  .watch .crown::after{
+    content:""; position:absolute; right:-3px; top:6px;
+    width:6px; height:22px; border-radius:3px;
+    background: linear-gradient(90deg, oklch(55% 0.01 70), oklch(75% 0.01 70));
+  }
+  .watch .side-btn{
+    position:absolute;
+    right:-3px; top: 56%;
+    width:5px; height:42px;
+    background: linear-gradient(90deg, oklch(55% 0.01 70), oklch(75% 0.01 70));
+    border-radius:2px;
+  }
+  /* screen */
+  .screen{
+    width:100%; height:100%;
+    border-radius: 38px;
+    background:
+      radial-gradient(120% 80% at 50% 0%, oklch(28% 0.02 70), #000 70%);
+    color:#fff;
+    position:relative;
+    overflow:hidden;
+    font-family:var(--font-rounded);
+    display:flex;
+    flex-direction:column;
+  }
+  /* subtle inner highlight */
+  .screen::before{
+    content:""; position:absolute; inset:0;
+    background: radial-gradient(80% 40% at 50% -10%, oklch(60% 0.05 70 / 0.15), transparent 60%);
+    pointer-events:none;
+  }
+
+  /* status bar */
+  .status{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 8px 14px 0;
+    font-size:9px;
+    font-weight:600;
+    letter-spacing:0.02em;
+  }
+  .status .left{display:flex;gap:4px;align-items:center;color:var(--state-color, var(--calm))}
+  .status .dot{width:5px;height:5px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor}
+
+  /* time row */
+  .time-row{
+    padding: 2px 14px 0;
+    display:flex; align-items:baseline; justify-content:space-between;
+  }
+  .time{
+    font-family:var(--font-rounded);
+    font-weight:700;
+    font-size:30px;
+    letter-spacing:-0.02em;
+    font-variant-numeric: tabular-nums;
+    color: var(--state-color, var(--calm));
+    line-height:1;
+  }
+  .date{
+    font-size:10px;
+    font-weight:600;
+    color: oklch(75% 0.02 70);
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+  }
+
+  /* pet stage */
+  .pet-stage{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    margin-top: 4px;
+  }
+  .pet-glow{
+    position:absolute;
+    width: 130px; height:130px;
+    border-radius:50%;
+    background: radial-gradient(circle, var(--state-color, var(--calm)) 0%, transparent 60%);
+    opacity:0.25;
+    filter: blur(6px);
+    animation: breathe 4s ease-in-out infinite;
+  }
+  @keyframes breathe{
+    0%,100%{ transform:scale(1); opacity:0.22 }
+    50%{ transform:scale(1.08); opacity:0.32 }
+  }
+  .pet{
+    width: 110px; height:110px;
+    position:relative;
+    animation: wiggle 3.6s ease-in-out infinite;
+    transform-origin: 50% 90%;
+  }
+  @keyframes wiggle{
+    0%,100%{transform: rotate(-2deg) translateY(0)}
+    50%{transform: rotate(2deg) translateY(-2px)}
+  }
+  .pet svg{width:100%;height:100%;display:block;overflow:visible}
+  .pet .blink{
+    transform-origin:center;
+    animation: blink 4.2s ease-in-out infinite;
+  }
+  @keyframes blink{
+    0%, 92%, 100%{ transform: scaleY(1) }
+    95%{ transform: scaleY(0.1) }
+  }
+  /* mouth morph by state via CSS variables */
+  .pet .mouth{ transition: d 0.4s ease; }
+
+  /* speech bubble */
+  .speech{
+    position:absolute;
+    top: 18px; right: 8px;
+    background: #fff;
+    color: oklch(20% 0.02 50);
+    font-family:var(--font-rounded);
+    font-size:9px;
+    font-weight:600;
+    padding: 4px 8px;
+    border-radius: 10px;
+    max-width: 80px;
+    text-align:center;
+    line-height:1.2;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    animation: pop 0.3s ease;
+  }
+  .speech::after{
+    content:""; position:absolute;
+    bottom: -4px; left: 18px;
+    width: 8px; height: 8px;
+    background:#fff;
+    transform: rotate(45deg);
+    border-radius:1px;
+  }
+  @keyframes pop{
+    from{transform: scale(0.7); opacity:0}
+    to{transform:scale(1); opacity:1}
+  }
+
+  /* message under pet */
+  .message{
+    text-align:center;
+    padding: 0 12px 4px;
+    font-size:11px;
+    font-weight:600;
+    color:#fff;
+    line-height:1.25;
+    min-height: 28px;
+  }
+  .message .label{
+    display:inline-block;
+    font-size:8px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    color: var(--state-color, var(--calm));
+    margin-bottom: 2px;
+  }
+
+  /* metrics row */
+  .metrics{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    padding: 0 12px 8px;
+  }
+  .metric{
+    background: oklch(20% 0.01 70 / 0.6);
+    border-radius: 10px;
+    padding: 4px 8px;
+    display:flex; flex-direction:column; gap:0;
+    border: 0.5px solid oklch(40% 0.01 70 / 0.5);
+  }
+  .metric .k{
+    font-size:7.5px; font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color: oklch(70% 0.02 70);
+  }
+  .metric .v{
+    font-size:13px; font-weight:700;
+    font-variant-numeric: tabular-nums;
+    color:#fff;
+    letter-spacing:-0.01em;
+  }
+  .metric .v small{ font-size:7px; font-weight:600; color: oklch(70% 0.02 70); margin-left:1px }
+  .metric.hr .v{ color: oklch(75% 0.18 25) }
+
+  /* stress ring at very bottom */
+  .stress-ring{
+    position:absolute;
+    bottom: 18px; left: 50%;
+    transform: translateX(-50%);
+    display:flex; gap:3px;
+    align-items:center;
+  }
+  .stress-ring .seg{
+    width: 14px; height: 3px; border-radius:2px;
+    background: oklch(35% 0.01 70);
+    transition: background 0.3s;
+  }
+  .stress-ring .seg.on{ background: var(--state-color, var(--calm)) }
+
+  /* ── side panel ──────────────────────────────────── */
+  .panel{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    height: fit-content;
+    position: sticky;
+    top: 32px;
+    display:flex; flex-direction:column; gap:24px;
+  }
+  .panel h2{
+    font-family:var(--font-display);
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .seg-control{
+    display:grid; grid-template-columns: 1fr 1fr; gap:0;
+    background: oklch(94% 0.01 70);
+    border-radius:10px; padding:3px;
+  }
+  .seg-control button{
+    border:0; background:transparent;
+    padding: 8px 12px;
+    border-radius:7px;
+    font-family:var(--font-rounded);
+    font-size:13px; font-weight:600;
+    color: var(--ink);
+    cursor:pointer;
+    transition: background 0.18s;
+  }
+  .seg-control button.on{
+    background: var(--surface);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .states{display:flex; flex-direction:column; gap:6px}
+  .state-btn{
+    display:flex; align-items:center; gap:12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor:pointer;
+    text-align:left;
+    transition: all 0.15s;
+    font-family: var(--font-body);
+  }
+  .state-btn:hover{ border-color: oklch(80% 0.02 70) }
+  .state-btn.on{
+    border-color: transparent;
+    background: oklch(96% 0.014 70);
+    box-shadow: inset 0 0 0 1.5px var(--c);
+  }
+  .state-btn .swatch{
+    width:14px; height:14px; border-radius:50%;
+    background: var(--c);
+    flex-shrink:0;
+    box-shadow: 0 0 0 3px oklch(96% 0.014 70);
+  }
+  .state-btn .lbl{ font-size:13px; font-weight:600; color:var(--ink) }
+  .state-btn .sub{ font-size:11px; color:var(--muted); margin-top:1px }
+  .state-btn .col{display:flex;flex-direction:column}
+
+  /* complications preview */
+  .complications{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;
+  }
+  .compl{
+    aspect-ratio:1;
+    border-radius: 18px;
+    background: #000;
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-family:var(--font-rounded);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  .compl.circ{ border-radius:50% }
+  .compl.modular{ border-radius:14px }
+  .compl .pet-mini{
+    width: 60%; height: 60%;
+    animation: breathe 3s ease-in-out infinite;
+  }
+  .compl .label-mini{
+    position:absolute; bottom:6px; left:0; right:0;
+    text-align:center;
+    font-size:7px; font-weight:700;
+    letter-spacing:0.1em; text-transform:uppercase;
+    color: var(--state-color, var(--calm));
+  }
+  .compl .num-mini{
+    position:absolute; top:6px; left:0; right:0;
+    text-align:center;
+    font-size:10px; font-weight:700;
+    color: oklch(75% 0.02 70);
+    font-variant-numeric: tabular-nums;
+  }
+  .compl-labels{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;
+    margin-top:8px;
+    font-size:10px; color:var(--muted);
+    text-align:center;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    font-weight:600;
+  }
+
+  .credit{
+    font-size:11px;
+    color:var(--muted);
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+    line-height:1.5;
+  }
+  .credit b{color:var(--ink); font-weight:600}
+
+  .footer-note{
+    text-align:center;
+    color:var(--muted);
+    font-size:12px;
+    margin-top:8px;
+  }
+  kbd{
+    font-family:var(--font-rounded);
+    background: oklch(94% 0.01 70);
+    padding: 1px 6px; border-radius:4px;
+    font-size:11px; font-weight:600;
+    border: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<main class="stage">
+  <div class="eyebrow">StressPet · Apple Watch Series 10</div>
+  <h1>A pocket companion that <em>feels what you feel</em>.</h1>
+
+  <div class="watch" id="watch">
+    <div class="case">
+      <div class="bezel">
+        <div class="screen" id="screen">
+          <div class="status">
+            <span class="left"><span class="dot"></span> <span id="state-name">Calm</span></span>
+            <span style="color:oklch(75% 0.02 70)">100%</span>
+          </div>
+
+          <div class="time-row">
+            <span class="time" id="time">9:41</span>
+            <span class="date" id="date">TUE · MAY 13</span>
+          </div>
+
+          <div class="pet-stage">
+            <div class="pet-glow"></div>
+            <div class="speech" id="speech">元气满满！</div>
+            <div class="pet" id="pet"><!-- svg injected --></div>
+          </div>
+
+          <div class="message">
+            <div class="label" id="msg-label">LOW STRESS</div>
+            <div id="msg">You're glowing. Keep this energy ✨</div>
+          </div>
+
+          <div class="metrics">
+            <div class="metric hr">
+              <span class="k">♥ BPM</span>
+              <span class="v" id="bpm">68</span>
+            </div>
+            <div class="metric">
+              <span class="k">HRV</span>
+              <span class="v" id="hrv">62<small>ms</small></span>
+            </div>
+          </div>
+
+          <div class="stress-ring" id="ring">
+            <span class="seg on"></span>
+            <span class="seg"></span>
+            <span class="seg"></span>
+            <span class="seg"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="crown"></div>
+    <div class="side-btn"></div>
+  </div>
+
+  <div class="footer-note">Tap a stress state on the right · press <kbd>1</kbd>–<kbd>4</kbd> to switch</div>
+</main>
+
+<aside class="panel">
+  <div>
+    <h2>Pet</h2>
+    <div class="seg-control" id="pet-toggle" style="margin-top:10px">
+      <button data-pet="cat" class="on">🐱 Cat</button>
+      <button data-pet="dog">🐶 Dog</button>
+    </div>
+  </div>
+
+  <div>
+    <h2>Stress State</h2>
+    <div class="states" id="states" style="margin-top:10px"></div>
+  </div>
+
+  <div>
+    <h2>Complications</h2>
+    <div class="complications" id="complications">
+      <div class="compl circ">
+        <div class="pet-mini" id="compl-1"></div>
+      </div>
+      <div class="compl modular">
+        <div class="num-mini" id="compl-bpm">68</div>
+        <div class="pet-mini" id="compl-2" style="width:40%;height:40%;margin-top:6px"></div>
+        <div class="label-mini" id="compl-label">CALM</div>
+      </div>
+      <div class="compl">
+        <div class="pet-mini" id="compl-3"></div>
+      </div>
+    </div>
+    <div class="compl-labels">
+      <span>Corner</span><span>Modular</span><span>Subdial</span>
+    </div>
+  </div>
+
+  <div class="credit">
+    <b>StressPet</b> — a watchOS prototype. Pet companion reflects HRV-derived stress, animates idle, and offers a tiny daily nudge. Pure SVG/CSS — no images, no libraries.
+  </div>
+</aside>
+
+<script>
+// ── pet SVGs ────────────────────────────────────────
+const eyeShapes = {
+  calm:  'M -3 0 Q 0 3 3 0',           // happy ^^
+  okay:  'M -3 0 a 3 3 0 1 0 6 0',     // round
+  stressed: 'M -3 -2 L 3 2 M -3 2 L 3 -2', // x crossed (worried)
+  over:  'M -3 0 Q 0 -3 3 0'            // upside down (sad)
+};
+const mouthShapes = {
+  cat: {
+    calm:  'M 0 6 q -4 4 -8 0 M 0 6 q 4 4 8 0',
+    okay:  'M -4 6 q 4 3 8 0',
+    stressed: 'M -5 7 L 5 7',
+    over:  'M -5 9 q 5 -5 10 0'
+  },
+  dog: {
+    calm:  'M -6 4 q 6 8 12 0',
+    okay:  'M -4 5 q 4 4 8 0',
+    stressed: 'M -5 6 L 5 6',
+    over:  'M -5 8 q 5 -5 10 0'
+  }
+};
+
+function petSVG(kind, state, color){
+  const eye = eyeShapes[state];
+  const mouth = mouthShapes[kind][state];
+  const cheekOpacity = state === 'calm' ? 0.7 : state === 'okay' ? 0.5 : state === 'stressed' ? 0.4 : 0.3;
+
+  if (kind === 'cat'){
+    return `
+    <svg viewBox="-60 -60 120 120">
+      <!-- ears -->
+      <path d="M -38 -18 L -28 -45 L -16 -22 Z" fill="${color}"/>
+      <path d="M  38 -18 L  28 -45 L  16 -22 Z" fill="${color}"/>
+      <path d="M -34 -22 L -28 -38 L -20 -24 Z" fill="oklch(85% 0.06 30)"/>
+      <path d="M  34 -22 L  28 -38 L  20 -24 Z" fill="oklch(85% 0.06 30)"/>
+      <!-- head -->
+      <ellipse cx="0" cy="0" rx="38" ry="34" fill="${color}"/>
+      <!-- cheeks -->
+      <circle cx="-22" cy="10" r="6" fill="oklch(78% 0.18 25)" opacity="${cheekOpacity}"/>
+      <circle cx="22" cy="10" r="6" fill="oklch(78% 0.18 25)" opacity="${cheekOpacity}"/>
+      <!-- eyes -->
+      <g class="blink">
+        <g transform="translate(-14 -4)"><path d="${eye}" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round" fill="none"/></g>
+        <g transform="translate(14 -4)"><path d="${eye}" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round" fill="none"/></g>
+      </g>
+      <!-- nose -->
+      <path d="M -3 4 L 3 4 L 0 7 Z" fill="oklch(60% 0.15 20)"/>
+      <!-- mouth -->
+      <path class="mouth" d="${mouth}" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <!-- whiskers -->
+      <path d="M -28 4 L -42 2 M -28 8 L -42 10" stroke="#1a1a1a" stroke-width="0.8" opacity="0.5"/>
+      <path d="M  28 4 L  42 2 M  28 8 L  42 10" stroke="#1a1a1a" stroke-width="0.8" opacity="0.5"/>
+    </svg>`;
+  } else {
+    return `
+    <svg viewBox="-60 -60 120 120">
+      <!-- floppy ears -->
+      <ellipse cx="-32" cy="-8" rx="14" ry="22" fill="oklch(40% 0.05 50)" transform="rotate(-15 -32 -8)"/>
+      <ellipse cx=" 32" cy="-8" rx="14" ry="22" fill="oklch(40% 0.05 50)" transform="rotate(15 32 -8)"/>
+      <!-- head -->
+      <ellipse cx="0" cy="2" rx="36" ry="34" fill="${color}"/>
+      <!-- snout -->
+      <ellipse cx="0" cy="14" rx="18" ry="14" fill="oklch(94% 0.02 70)"/>
+      <!-- cheeks -->
+      <circle cx="-22" cy="14" r="5" fill="oklch(78% 0.18 25)" opacity="${cheekOpacity}"/>
+      <circle cx="22" cy="14" r="5" fill="oklch(78% 0.18 25)" opacity="${cheekOpacity}"/>
+      <!-- eyes -->
+      <g class="blink">
+        <g transform="translate(-14 -6)"><path d="${eye}" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round" fill="none"/></g>
+        <g transform="translate(14 -6)"><path d="${eye}" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round" fill="none"/></g>
+      </g>
+      <!-- nose -->
+      <ellipse cx="0" cy="9" rx="4" ry="3" fill="#1a1a1a"/>
+      <!-- mouth -->
+      <path class="mouth" d="${mouth}" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" fill="none" transform="translate(0 6)"/>
+      <!-- tongue when calm -->
+      ${state==='calm' ? '<ellipse cx="2" cy="22" rx="3" ry="2" fill="oklch(72% 0.18 20)"/>' : ''}
+    </svg>`;
+  }
+}
+
+// ── states ──────────────────────────────────────────
+const STATES = [
+  { id:'calm',     label:'Calm',        sub:'Low stress · breathing easy', cssVar:'--calm',
+    msgLabel:'LOW STRESS',  msg:"You're glowing. Keep this energy ✨", speech:'元气满满！',
+    bpm:68, hrv:62, segs:1, petColor:{cat:'oklch(88% 0.04 70)', dog:'oklch(78% 0.07 60)'} },
+  { id:'okay',     label:'Okay',        sub:'Steady · normal range',       cssVar:'--okay',
+    msgLabel:'BALANCED',    msg:'Cruising along nicely. Sip some water.', speech:'喝口水～',
+    bpm:78, hrv:48, segs:2, petColor:{cat:'oklch(90% 0.06 90)', dog:'oklch(80% 0.08 80)'} },
+  { id:'stressed', label:'Stressed',    sub:'Elevated · tension rising',   cssVar:'--stressed',
+    msgLabel:'TENSE',       msg:'Take 3 slow breaths with me.', speech:'深呼吸~',
+    bpm:96, hrv:32, segs:3, petColor:{cat:'oklch(85% 0.10 50)', dog:'oklch(75% 0.10 45)'} },
+  { id:'over',     label:'Overwhelmed', sub:'High · time for a break',     cssVar:'--over',
+    msgLabel:'HIGH STRESS', msg:'Pause. Eat something good. 吃点好的 🍡', speech:'吃点好的',
+    bpm:112, hrv:22, segs:4, petColor:{cat:'oklch(80% 0.13 30)', dog:'oklch(70% 0.13 30)'} }
+];
+
+// ── render side state list ──────────────────────────
+const statesEl = document.getElementById('states');
+STATES.forEach((s, i) => {
+  const colorVal = `var(${s.cssVar})`;
+  const btn = document.createElement('button');
+  btn.className = 'state-btn' + (i===0 ? ' on' : '');
+  btn.style.setProperty('--c', colorVal);
+  btn.dataset.state = s.id;
+  btn.innerHTML = `<span class="swatch"></span><span class="col"><span class="lbl">${s.label}</span><span class="sub">${s.sub}</span></span>`;
+  btn.addEventListener('click', () => setState(s.id));
+  statesEl.appendChild(btn);
+});
+
+// ── state mgmt ──────────────────────────────────────
+let current = 'calm';
+let petKind = 'cat';
+
+function setState(id){
+  current = id;
+  const s = STATES.find(x => x.id === id);
+  const colorVal = `var(${s.cssVar})`;
+  document.getElementById('screen').style.setProperty('--state-color', colorVal);
+  document.getElementById('state-name').textContent = s.label;
+  document.getElementById('msg-label').textContent = s.msgLabel;
+  document.getElementById('msg').textContent = s.msg;
+  document.getElementById('bpm').textContent = s.bpm;
+  document.getElementById('hrv').innerHTML = s.hrv + '<small>ms</small>';
+  // speech
+  const sp = document.getElementById('speech');
+  sp.style.animation = 'none';
+  // force reflow
+  void sp.offsetWidth;
+  sp.style.animation = '';
+  sp.textContent = s.speech;
+  // ring
+  document.querySelectorAll('#ring .seg').forEach((el, i) => {
+    el.classList.toggle('on', i < s.segs);
+  });
+  // active button
+  document.querySelectorAll('.state-btn').forEach(b => b.classList.toggle('on', b.dataset.state === id));
+  // pet
+  renderPet();
+  // complications
+  renderComplications();
+}
+
+function renderPet(){
+  const s = STATES.find(x => x.id === current);
+  const color = s.petColor[petKind];
+  document.getElementById('pet').innerHTML = petSVG(petKind, current, color);
+}
+
+function renderComplications(){
+  const s = STATES.find(x => x.id === current);
+  const color = s.petColor[petKind];
+  document.getElementById('compl-1').innerHTML = petSVG(petKind, current, color);
+  document.getElementById('compl-2').innerHTML = petSVG(petKind, current, color);
+  document.getElementById('compl-3').innerHTML = petSVG(petKind, current, color);
+  document.getElementById('compl-bpm').textContent = s.bpm;
+  document.getElementById('compl-label').textContent = s.msgLabel.split(' ')[0];
+  document.querySelectorAll('.compl').forEach(c => c.style.setProperty('--state-color', `var(${s.cssVar})`));
+}
+
+// pet toggle
+document.querySelectorAll('#pet-toggle button').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('#pet-toggle button').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    petKind = b.dataset.pet;
+    renderPet();
+    renderComplications();
+  });
+});
+
+// keyboard
+window.addEventListener('keydown', e => {
+  const map = {'1':'calm','2':'okay','3':'stressed','4':'over'};
+  if (map[e.key]) setState(map[e.key]);
+});
+
+// live time
+function tick(){
+  const d = new Date();
+  const h = d.getHours();
+  const m = String(d.getMinutes()).padStart(2,'0');
+  document.getElementById('time').textContent = `${h}:${m}`;
+  const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  document.getElementById('date').textContent = `${days[d.getDay()]} · ${months[d.getMonth()]} ${d.getDate()}`;
+}
+tick(); setInterval(tick, 30000);
+
+// initial
+document.getElementById('screen').style.setProperty('--state-color', 'var(--calm)');
+setState('calm');
+</script>
+
+</body>
+</html>
