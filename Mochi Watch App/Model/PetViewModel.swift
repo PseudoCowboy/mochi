@@ -3,6 +3,7 @@ import Combine
 import Observation
 import SwiftData
 import Foundation
+import WidgetKit
 
 @Observable
 final class PetViewModel {
@@ -56,6 +57,7 @@ final class PetViewModel {
         } catch {
             return
         }
+        WidgetCenter.shared.reloadAllTimelines()
         recomputeMaturity()
     }
 

@@ -22,7 +22,8 @@ struct Mochi_Watch_AppApp: App {
 
         let container: ModelContainer
         do {
-            container = try ModelContainer(for: StressSample.self)
+            let configuration = ModelConfiguration(groupContainer: .identifier("group.com.pseudocowboy.mochi"))
+            container = try ModelContainer(for: StressSample.self, configurations: configuration)
         } catch {
             fatalError("Failed to create ModelContainer for StressSample: \(error)")
         }
