@@ -11,9 +11,15 @@ final class HeartRateService {
         case unavailable
     }
 
+    enum AuthorizationError: Error {
+        case healthDataUnavailable
+        case missingHeartRateType
+    }
+
     private(set) var currentBPM: Int?
     private(set) var lastSampleDate: Date?
     private(set) var authState: AuthState = .notDetermined
+    private(set) var authorizationStatus: HKAuthorizationStatus = .notDetermined
 
     @ObservationIgnored private let store = HKHealthStore()
     @ObservationIgnored private var anchor: HKQueryAnchor?
@@ -27,33 +33,37 @@ final class HeartRateService {
         HKUnit.count().unitDivided(by: .minute())
     }
 
-    func requestAuthorization() async {
+    init() {
         guard HKHealthStore.isHealthDataAvailable(), let hrType = heartRateType else {
-            await MainActor.run { self.authState = .unavailable }
+            authState = .unavailable
             return
+        }
+        let status = store.authorizationStatus(for: hrType)
+        authorizationStatus = status
+        authState = Self.mapAuthState(from: status)
+    }
+
+    @discardableResult
+    func requestAuthorization() async throws -> HKAuthorizationStatus {
+        guard HKHealthStore.isHealthDataAvailable() else {
+            await MainActor.run { self.authState = .unavailable }
+            throw AuthorizationError.healthDataUnavailable
+        }
+        guard let hrType = heartRateType else {
+            await MainActor.run { self.authState = .unavailable }
+            throw AuthorizationError.missingHeartRateType
         }
 
         let readTypes: Set<HKObjectType> = [hrType]
         let shareTypes: Set<HKSampleType> = []
 
-        do {
-            try await store.requestAuthorization(toShare: shareTypes, read: readTypes)
-            let status = store.authorizationStatus(for: hrType)
-            await MainActor.run {
-                switch status {
-                case .sharingAuthorized:
-                    self.authState = .authorized
-                case .sharingDenied:
-                    self.authState = .denied
-                case .notDetermined:
-                    self.authState = .notDetermined
-                @unknown default:
-                    self.authState = .notDetermined
-                }
-            }
-        } catch {
-            await MainActor.run { self.authState = .denied }
+        try await store.requestAuthorization(toShare: shareTypes, read: readTypes)
+        let status = store.authorizationStatus(for: hrType)
+        await MainActor.run {
+            self.authorizationStatus = status
+            self.authState = Self.mapAuthState(from: status)
         }
+        return status
     }
 
     func start() {
@@ -82,6 +92,19 @@ final class HeartRateService {
         if let q = query {
             store.stop(q)
             query = nil
+        }
+    }
+
+    private static func mapAuthState(from status: HKAuthorizationStatus) -> AuthState {
+        switch status {
+        case .sharingAuthorized:
+            return .authorized
+        case .sharingDenied:
+            return .denied
+        case .notDetermined:
+            return .notDetermined
+        @unknown default:
+            return .notDetermined
         }
     }
 

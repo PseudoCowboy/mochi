@@ -40,7 +40,8 @@ struct Mochi_Watch_AppApp: App {
                 .modelContainer(modelContainer)
                 .task {
                     viewModel.attach(context: modelContainer.mainContext)
-                    await heartRateService.requestAuthorization()
+                    // TODO(apollo): drop this implicit auth call once OnboardingView gates first launch.
+                    try? await heartRateService.requestAuthorization()
                     heartRateService.start()
                     await stressNotifier.requestAuthorization()
                     stressNotifier.start()
