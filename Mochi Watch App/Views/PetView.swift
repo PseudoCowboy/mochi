@@ -8,6 +8,35 @@ struct PetView: View {
         case o
     }
     
+    struct MouthShape: Shape {
+        var mouth: Mouth
+        
+        func path(in rect: CGRect) -> Path {
+            var path = Path()
+            let w = rect.width
+            let h = rect.height
+            let cx = w / 2
+            let cy = h / 2
+            
+            switch mouth {
+            case .smile:
+                path.move(to: CGPoint(x: cx - w * 0.08, y: cy + h * 0.1))
+                path.addQuadCurve(to: CGPoint(x: cx, y: cy + h * 0.1), control: CGPoint(x: cx - w * 0.04, y: cy + h * 0.14))
+                path.addQuadCurve(to: CGPoint(x: cx + w * 0.08, y: cy + h * 0.1), control: CGPoint(x: cx + w * 0.04, y: cy + h * 0.14))
+            case .neutral:
+                path.move(to: CGPoint(x: cx - w * 0.04, y: cy + h * 0.12))
+                path.addQuadCurve(to: CGPoint(x: cx + w * 0.04, y: cy + h * 0.1), control: CGPoint(x: cx, y: cy + h * 0.13))
+            case .small:
+                path.move(to: CGPoint(x: cx - w * 0.04, y: cy + h * 0.12))
+                path.addLine(to: CGPoint(x: cx + w * 0.04, y: cy + h * 0.12))
+            case .o:
+                path.move(to: CGPoint(x: cx - w * 0.05, y: cy + h * 0.14))
+                path.addQuadCurve(to: CGPoint(x: cx + w * 0.05, y: cy + h * 0.14), control: CGPoint(x: cx, y: cy + h * 0.09))
+            }
+            return path
+        }
+    }
+    
     var mouth: Mouth
     var blink: Bool
     
@@ -93,24 +122,8 @@ struct PetView: View {
                 .fill(Color(white: 0.3))
                 
                 // Mouth
-                Path { path in
-                    switch mouth {
-                    case .smile:
-                        path.move(to: CGPoint(x: cx - w * 0.08, y: cy + h * 0.1))
-                        path.addQuadCurve(to: CGPoint(x: cx, y: cy + h * 0.1), control: CGPoint(x: cx - w * 0.04, y: cy + h * 0.14))
-                        path.addQuadCurve(to: CGPoint(x: cx + w * 0.08, y: cy + h * 0.1), control: CGPoint(x: cx + w * 0.04, y: cy + h * 0.14))
-                    case .neutral:
-                        path.move(to: CGPoint(x: cx - w * 0.04, y: cy + h * 0.12))
-                        path.addQuadCurve(to: CGPoint(x: cx + w * 0.04, y: cy + h * 0.1), control: CGPoint(x: cx, y: cy + h * 0.13))
-                    case .small:
-                        path.move(to: CGPoint(x: cx - w * 0.04, y: cy + h * 0.12))
-                        path.addLine(to: CGPoint(x: cx + w * 0.04, y: cy + h * 0.12))
-                    case .o:
-                        path.move(to: CGPoint(x: cx - w * 0.05, y: cy + h * 0.14))
-                        path.addQuadCurve(to: CGPoint(x: cx + w * 0.05, y: cy + h * 0.14), control: CGPoint(x: cx, y: cy + h * 0.09))
-                    }
-                }
-                .stroke(Color.black, style: StrokeStyle(lineWidth: 2, lineCap: .round))
+                MouthShape(mouth: mouth)
+                    .stroke(Color.black, style: StrokeStyle(lineWidth: 2, lineCap: .round))
                 
             }
         }
