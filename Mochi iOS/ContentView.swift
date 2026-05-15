@@ -15,28 +15,40 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack {
-            if samples.isEmpty {
-                VStack(spacing: 12) {
-                    Image(systemName: "heart.text.square")
-                        .font(.system(size: 48))
-                        .foregroundColor(.secondary)
-                    
-                    Text("No stress samples yet")
+            VStack(spacing: 0) {
+                HStack {
+                    Text("Stage: \(PetMaturity.compute(samples: samples).evolutionStage.displayName)")
                         .font(.headline)
-                    
-                    Text("Wear your Apple Watch to start tracking.")
-                        .font(.subheadline)
                         .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
+                    Spacer()
                 }
-            } else {
-                List(samples) { sample in
-                    StressHistoryRow(sample: sample)
+                .padding()
+                
+                if samples.isEmpty {
+                    Spacer()
+                    VStack(spacing: 12) {
+                        Image(systemName: "heart.text.square")
+                            .font(.system(size: 48))
+                            .foregroundColor(.secondary)
+                        
+                        Text("No stress samples yet")
+                            .font(.headline)
+                        
+                        Text("Wear your Apple Watch to start tracking.")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                    }
+                    Spacer()
+                } else {
+                    List(samples) { sample in
+                        StressHistoryRow(sample: sample)
+                    }
+                    .listStyle(.plain)
                 }
-                .listStyle(.plain)
-                .navigationTitle("Last 24 Hours")
             }
+            .navigationTitle("Last 24 Hours")
         }
     }
 }

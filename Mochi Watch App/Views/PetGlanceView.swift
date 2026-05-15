@@ -53,7 +53,7 @@ struct PetGlanceView: View {
                         value: pulsePhase
                     )
                 
-                PetView(mouth: viewModel.state.mouthShape, blink: blink)
+                PetView(stage: viewModel.evolutionStage, mouth: viewModel.state.mouthShape, blink: blink)
                     .frame(width: 90, height: 90)
                     .animation(.easeInOut(duration: 0.4), value: viewModel.state.mouthShape)
                 
