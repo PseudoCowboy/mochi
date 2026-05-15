@@ -4,6 +4,7 @@ import Combine
 struct PetGlanceView: View {
     @State private var viewModel = PetViewModel()
     @State private var blink: Bool = false
+    @State private var pulsePhase: Bool = false
     
     // For manual rotation in simulator
     @State private var crownValue: Double = 0.0
@@ -40,8 +41,14 @@ struct PetGlanceView: View {
                         RadialGradient(gradient: Gradient(colors: [viewModel.state.headlineColor, Color.clear]), center: .center, startRadius: 0, endRadius: 65)
                     )
                     .frame(width: 130, height: 130)
-                    .opacity(0.25)
+                    .opacity(viewModel.state == .over ? (pulsePhase ? 1.0 : 0.6) : 0.25)
                     .blur(radius: 6)
+                    .animation(
+                        viewModel.state == .over
+                            ? .easeInOut(duration: 0.5).repeatForever(autoreverses: true)
+                            : .default,
+                        value: pulsePhase
+                    )
                 
                 PetView(mouth: viewModel.state.mouthShape, blink: blink)
                     .frame(width: 90, height: 90)
