@@ -33,3 +33,14 @@ enum PetMaturity {
         return level(totalCount: total, restingRatioLast7Days: ratio)
     }
 }
+
+extension PetMaturity.Level {
+    var evolutionStage: EvolutionStage {
+        switch self {
+        case .l0: return .egg
+        case .l1: return .baby
+        case .l2: return .teen
+        case .l3: return .adult
+        }
+    }
+}

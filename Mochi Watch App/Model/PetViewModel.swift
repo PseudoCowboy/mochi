@@ -12,6 +12,8 @@ final class PetViewModel {
     var hrvMs: Int = 0
     var maturity: PetMaturity.Level = .l0
 
+    var evolutionStage: EvolutionStage { maturity.evolutionStage }
+
     private var heartRate: HeartRateService?
     @ObservationIgnored private var modelContext: ModelContext?
     @ObservationIgnored private var hasSeenInitialState: Bool = false
