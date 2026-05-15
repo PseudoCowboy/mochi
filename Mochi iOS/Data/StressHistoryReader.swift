@@ -28,3 +28,16 @@ struct StressHistoryReader {
         )
     }
 }
+
+@MainActor
+extension StressHistoryReader {
+    func fetch24h(now: Date = .now) throws -> [StressSample] {
+        let cutoff = now.addingTimeInterval(-86_400)
+        var d = FetchDescriptor<StressSample>(
+            predicate: #Predicate { $0.date >= cutoff },
+            sortBy: [SortDescriptor(\.date, order: .forward)]
+        )
+        d.includePendingChanges = true
+        return try context.fetch(d)
+    }
+}
