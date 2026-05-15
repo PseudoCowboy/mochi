@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D6633252F20C93C000BD917"
-               BuildableName = "Mochi Watch App.app"
-               BlueprintName = "Mochi Watch App"
+               BlueprintIdentifier = "9D6633182F20C93A000BD917"
+               BuildableName = "Mochi.app"
+               BlueprintName = "Mochi"
                ReferencedContainer = "container:Mochi.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,28 +29,6 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
-      <Testables>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AADD00000000000000000003"
-               BuildableName = "Mochi Watch AppTests.xctest"
-               BlueprintName = "Mochi Watch AppTests"
-               ReferencedContainer = "container:Mochi.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9D6633252F20C93C000BD917"
-            BuildableName = "Mochi Watch App.app"
-            BlueprintName = "Mochi Watch App"
-            ReferencedContainer = "container:Mochi.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -66,9 +44,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9D6633252F20C93C000BD917"
-            BuildableName = "Mochi Watch App.app"
-            BlueprintName = "Mochi Watch App"
+            BlueprintIdentifier = "9D6633182F20C93A000BD917"
+            BuildableName = "Mochi.app"
+            BlueprintName = "Mochi"
             ReferencedContainer = "container:Mochi.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -83,9 +61,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9D6633252F20C93C000BD917"
-            BuildableName = "Mochi Watch App.app"
-            BlueprintName = "Mochi Watch App"
+            BlueprintIdentifier = "9D6633182F20C93A000BD917"
+            BuildableName = "Mochi.app"
+            BlueprintName = "Mochi"
             ReferencedContainer = "container:Mochi.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
