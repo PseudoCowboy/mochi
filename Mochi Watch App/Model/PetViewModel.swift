@@ -1,15 +1,20 @@
 import SwiftUI
 import Combine
 import Observation
+import SwiftData
+import Foundation
 
 @Observable
 final class PetViewModel {
     var state: StressState = .calm
     var bpm: Int = 0
     var hrvMs: Int = 0
-    
+    var maturity: PetMaturity.Level = .l0
+
     private var heartRate: HeartRateService?
-    
+    @ObservationIgnored private var modelContext: ModelContext?
+    @ObservationIgnored private var hasSeenInitialState: Bool = false
+
     init(heartRate: HeartRateService? = nil) {
         self.heartRate = heartRate
         if heartRate != nil {
@@ -18,14 +23,51 @@ final class PetViewModel {
             }
         }
     }
-    
+
+    @MainActor
+    func attach(context: ModelContext) {
+        self.modelContext = context
+        recomputeMaturity()
+    }
+
     @MainActor
     func refreshFromService() {
         guard let hr = heartRate, let v = hr.currentBPM else { return }
         bpm = v
-        state = StressState.from(bpm: v)
+        let newState = StressState.from(bpm: v)
+        let previous = state
+        state = newState
+        if !hasSeenInitialState {
+            hasSeenInitialState = true
+            return
+        }
+        if newState != previous {
+            persistTransition(to: newState, bpm: v)
+        }
     }
-    
+
+    @MainActor
+    private func persistTransition(to newState: StressState, bpm: Int) {
+        guard let ctx = modelContext else { return }
+        let sample = StressSample(date: .now, bpm: bpm, state: newState)
+        ctx.insert(sample)
+        do {
+            try ctx.save()
+        } catch {
+            return
+        }
+        recomputeMaturity()
+    }
+
+    @MainActor
+    private func recomputeMaturity() {
+        guard let ctx = modelContext else { return }
+        let descriptor = FetchDescriptor<StressSample>()
+        if let samples = try? ctx.fetch(descriptor) {
+            maturity = PetMaturity.compute(samples: samples)
+        }
+    }
+
     @MainActor
     private func startObserving() {
         func observe() {
@@ -40,14 +82,16 @@ final class PetViewModel {
         }
         observe()
     }
-    
+
 #if targetEnvironment(simulator)
     func cycle() {
         let all = StressState.allCases
         let currentIndex = all.firstIndex(of: state) ?? 0
         let nextIndex = (currentIndex + 1) % all.count
-        state = all[nextIndex]
-        
+        let previous = state
+        let next = all[nextIndex]
+        state = next
+
         switch state {
         case .calm:
             bpm = 68
@@ -61,6 +105,12 @@ final class PetViewModel {
         case .over:
             bpm = 112
             hrvMs = 22
+        }
+
+        if next != previous {
+            Task { @MainActor in
+                persistTransition(to: next, bpm: bpm)
+            }
         }
     }
 #endif
