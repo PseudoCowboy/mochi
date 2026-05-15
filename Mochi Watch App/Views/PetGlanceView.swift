@@ -14,16 +14,19 @@ struct PetGlanceView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Status pill and Time row
-            HStack {
-                HStack(spacing: 4) {
-                    Circle()
-                        .fill(viewModel.state.headlineColor)
-                        .frame(width: 6, height: 6)
-                        .shadow(color: viewModel.state.headlineColor.opacity(0.8), radius: 3)
-                    
-                    Text(viewModel.state.label)
-                        .font(.system(size: 10, weight: .bold))
-                        .foregroundColor(viewModel.state.headlineColor)
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 4) {
+                        Circle()
+                            .fill(viewModel.state.headlineColor)
+                            .frame(width: 6, height: 6)
+                            .shadow(color: viewModel.state.headlineColor.opacity(0.8), radius: 3)
+                        
+                        Text(viewModel.state.label)
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundColor(viewModel.state.headlineColor)
+                    }
+                    MaturityBadgeView(level: viewModel.maturity)
                 }
                 Spacer()
                 Text(Date(), format: .dateTime.hour().minute())
