@@ -48,7 +48,10 @@
 		9D66332A2F20C93C000BD917 /* Mochi Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			explicitFileTypes = {
+				"Model/PetMaturity.swift" = sourcecode.swift;
+				"Model/StressSample.swift" = sourcecode.swift;
 				"Mochi Watch App.entitlements" = text.plist.entitlements;
+				"Views/MaturityBadgeView.swift" = sourcecode.swift;
 			};
 			path = "Mochi Watch App";
 			sourceTree = "<group>";
