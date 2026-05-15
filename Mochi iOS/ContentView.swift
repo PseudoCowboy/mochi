@@ -42,6 +42,8 @@ struct ContentView: View {
                     }
                     Spacer()
                 } else {
+                    StressHistoryChartView(samples: samples)
+                    
                     List(samples) { sample in
                         StressHistoryRow(sample: sample)
                     }
