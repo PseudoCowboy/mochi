@@ -8,22 +8,27 @@ struct StressHistoryChartView: View {
         samples.sorted { $0.date < $1.date }
     }
     
+    @ViewBuilder
     var body: some View {
-        Chart {
-            ForEach(sortedSamples) { sample in
-                LineMark(
-                    x: .value("Time", sample.date),
-                    y: .value("BPM", sample.bpm)
-                )
-                
-                PointMark(
-                    x: .value("Time", sample.date),
-                    y: .value("BPM", sample.bpm)
-                )
-                .foregroundStyle(color(for: sample.state))
+        if samples.isEmpty {
+            EmptyView()
+        } else {
+            Chart {
+                ForEach(sortedSamples) { sample in
+                    LineMark(
+                        x: .value("Time", sample.date),
+                        y: .value("BPM", sample.bpm)
+                    )
+
+                    PointMark(
+                        x: .value("Time", sample.date),
+                        y: .value("BPM", sample.bpm)
+                    )
+                    .foregroundStyle(color(for: sample.state))
+                }
             }
+            .frame(height: 220)
         }
-        .frame(height: 220)
     }
     
     private func color(for state: StressState) -> Color {
