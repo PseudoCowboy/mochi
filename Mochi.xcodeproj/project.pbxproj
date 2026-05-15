@@ -13,6 +13,9 @@
 		9D6633422F20C940000BD917 /* StressState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D66334F2F20C940000BD917 /* StressState.swift */; };
 		9D6633432F20C940000BD917 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6633502F20C940000BD917 /* Palette.swift */; };
 		9D6633442F20C940000BD917 /* PetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6633512F20C940000BD917 /* PetView.swift */; };
+		AABB00100000000000000001 /* EvolutionStage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB00100000000000000099 /* EvolutionStage.swift */; };
+		AABB00100000000000000002 /* EvolutionStage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB00100000000000000099 /* EvolutionStage.swift */; };
+		AABB00100000000000000003 /* PetMaturity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB00100000000000000098 /* PetMaturity.swift */; };
 		9D6633452F20C940000BD917 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D6633522F20C940000BD917 /* SwiftUI.framework */; };
 		9D6633462F20C940000BD917 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D6633532F20C940000BD917 /* WidgetKit.framework */; };
 		9D6633472F20C940000BD917 /* SwiftData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D6633542F20C940000BD917 /* SwiftData.framework */; };
@@ -73,6 +76,8 @@
 		9D66334F2F20C940000BD917 /* StressState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Mochi Watch App/Model/StressState.swift"; sourceTree = "<group>"; };
 		9D6633502F20C940000BD917 /* Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Mochi Watch App/Theme/Palette.swift"; sourceTree = "<group>"; };
 		9D6633512F20C940000BD917 /* PetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Mochi Watch App/Views/PetView.swift"; sourceTree = "<group>"; };
+		AABB00100000000000000099 /* EvolutionStage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Mochi Watch App/Model/EvolutionStage.swift"; sourceTree = "<group>"; };
+		AABB00100000000000000098 /* PetMaturity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Mochi Watch App/Model/PetMaturity.swift"; sourceTree = "<group>"; };
 		9D6633522F20C940000BD917 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		9D6633532F20C940000BD917 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		9D6633542F20C940000BD917 /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = System/Library/Frameworks/SwiftData.framework; sourceTree = SDKROOT; };
@@ -194,6 +199,7 @@
 				9D66334F2F20C940000BD917 /* StressState.swift */,
 				9D6633502F20C940000BD917 /* Palette.swift */,
 				9D6633512F20C940000BD917 /* PetView.swift */,
+				AABB00100000000000000099 /* EvolutionStage.swift */,
 			);
 			name = "Complication Shared Sources";
 			sourceTree = "<group>";
@@ -421,6 +427,8 @@
 				9D6633612F20C941000BD917 /* StressState.swift in Sources */,
 				9D6633622F20C941000BD917 /* Palette.swift in Sources */,
 				9D6633632F20C941000BD917 /* PetView.swift in Sources */,
+				AABB00100000000000000002 /* EvolutionStage.swift in Sources */,
+				AABB00100000000000000003 /* PetMaturity.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -432,6 +440,7 @@
 				9D6633422F20C940000BD917 /* StressState.swift in Sources */,
 				9D6633432F20C940000BD917 /* Palette.swift in Sources */,
 				9D6633442F20C940000BD917 /* PetView.swift in Sources */,
+				AABB00100000000000000001 /* EvolutionStage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
