@@ -105,6 +105,9 @@
 		};
 		9D66334C2F20C940000BD917 /* Mochi Complication */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9DFEEDCA2F20C940000BD917 /* PBXFileSystemSynchronizedBuildFileExceptionSet */,
+			);
 			explicitFileTypes = {
 				"Info.plist" = text.plist.xml;
 				"Mochi Complication.entitlements" = text.plist.entitlements;
@@ -113,6 +116,17 @@
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		9DFEEDCA2F20C940000BD917 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Info.plist",
+				"Mochi Complication.entitlements",
+			);
+			target = 9D6633592F20C940000BD917 /* Mochi Complication */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		9D6633162F20C93A000BD917 /* Frameworks */ = {
