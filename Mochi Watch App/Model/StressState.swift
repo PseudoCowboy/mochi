@@ -61,4 +61,12 @@ enum StressState: Int, CaseIterable, Identifiable {
         case .over: return .o
         }
     }
+    
+    static func from(bpm: Int) -> StressState {
+        switch bpm {
+        case ..<90:      return .calm        // "resting"
+        case 90...130:   return .stressed    // "active"
+        default:         return .over        // ">130"
+        }
+    }
 }

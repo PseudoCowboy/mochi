@@ -2,7 +2,7 @@ import SwiftUI
 import Combine
 
 struct PetGlanceView: View {
-    @State private var viewModel = PetViewModel()
+    @Environment(PetViewModel.self) var viewModel
     @State private var blink: Bool = false
     @State private var pulsePhase: Bool = false
     
@@ -89,9 +89,11 @@ struct PetGlanceView: View {
                 }
             }
             .onTapGesture {
+#if targetEnvironment(simulator)
                 withAnimation {
                     viewModel.cycle()
                 }
+#endif
             }
             
             // Message
@@ -123,12 +125,14 @@ struct PetGlanceView: View {
         .focusable()
         .digitalCrownRotation($crownValue, from: 0, through: 100, by: 10, sensitivity: .low, isContinuous: true, isHapticFeedbackEnabled: true)
         .onChange(of: crownValue) { old, new in
+#if targetEnvironment(simulator)
             if abs(new - old) >= 10 {
                 withAnimation {
                     viewModel.cycle()
                 }
                 crownValue = new > old ? 0 : 100 // Reset to avoid hitting limits
             }
+#endif
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.black)
@@ -149,4 +153,5 @@ struct Triangle: Shape {
 
 #Preview {
     PetGlanceView()
+        .environment(PetViewModel())
 }
