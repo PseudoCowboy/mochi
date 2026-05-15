@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		9D6633272F20C93C000BD917 /* Mochi Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 9D6633262F20C93C000BD917 /* Mochi Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9D6633402F20C940000BD917 /* Mochi Complication.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 9D66334B2F20C940000BD917 /* Mochi Complication.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9D6633412F20C940000BD917 /* StressSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D66334E2F20C940000BD917 /* StressSample.swift */; };
+		9D6633422F20C940000BD917 /* StressState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D66334F2F20C940000BD917 /* StressState.swift */; };
+		9D6633432F20C940000BD917 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6633502F20C940000BD917 /* Palette.swift */; };
+		9D6633442F20C940000BD917 /* PetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6633512F20C940000BD917 /* PetView.swift */; };
+		9D6633452F20C940000BD917 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D6633522F20C940000BD917 /* SwiftUI.framework */; };
+		9D6633462F20C940000BD917 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D6633532F20C940000BD917 /* WidgetKit.framework */; };
+		9D6633472F20C940000BD917 /* SwiftData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D6633542F20C940000BD917 /* SwiftData.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -17,6 +25,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 9D6633252F20C93C000BD917;
 			remoteInfo = "Mochi Watch App";
+		};
+		9D6633482F20C940000BD917 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D6633112F20C939000BD917 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9D6633592F20C940000BD917;
+			remoteInfo = "Mochi Complication";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -32,11 +47,30 @@
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9D66334A2F20C940000BD917 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				9D6633402F20C940000BD917 /* Mochi Complication.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		9D6633192F20C93A000BD917 /* Mochi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mochi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D6633262F20C93C000BD917 /* Mochi Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mochi Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D66334B2F20C940000BD917 /* Mochi Complication.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Mochi Complication.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D66334E2F20C940000BD917 /* StressSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Mochi Watch App/Model/StressSample.swift"; sourceTree = "<group>"; };
+		9D66334F2F20C940000BD917 /* StressState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Mochi Watch App/Model/StressState.swift"; sourceTree = "<group>"; };
+		9D6633502F20C940000BD917 /* Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Mochi Watch App/Theme/Palette.swift"; sourceTree = "<group>"; };
+		9D6633512F20C940000BD917 /* PetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Mochi Watch App/Views/PetView.swift"; sourceTree = "<group>"; };
+		9D6633522F20C940000BD917 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		9D6633532F20C940000BD917 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		9D6633542F20C940000BD917 /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = System/Library/Frameworks/SwiftData.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -56,6 +90,15 @@
 			path = "Mochi Watch App";
 			sourceTree = "<group>";
 		};
+		9D66334C2F20C940000BD917 /* Mochi Complication */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			explicitFileTypes = {
+				"Info.plist" = text.plist.xml;
+				"Mochi Complication.entitlements" = text.plist.entitlements;
+			};
+			path = "Mochi Complication";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +116,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9D6633562F20C940000BD917 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9D6633452F20C940000BD917 /* SwiftUI.framework in Frameworks */,
+				9D6633462F20C940000BD917 /* WidgetKit.framework in Frameworks */,
+				9D6633472F20C940000BD917 /* SwiftData.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -81,6 +134,9 @@
 			children = (
 				9D66331B2F20C93A000BD917 /* Mochi */,
 				9D66332A2F20C93C000BD917 /* Mochi Watch App */,
+				9D66334C2F20C940000BD917 /* Mochi Complication */,
+				9D66334D2F20C940000BD917 /* Complication Shared Sources */,
+				9D6633552F20C940000BD917 /* Frameworks */,
 				9D66331A2F20C93A000BD917 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,8 +146,30 @@
 			children = (
 				9D6633192F20C93A000BD917 /* Mochi.app */,
 				9D6633262F20C93C000BD917 /* Mochi Watch App.app */,
+				9D66334B2F20C940000BD917 /* Mochi Complication.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		9D66334D2F20C940000BD917 /* Complication Shared Sources */ = {
+			isa = PBXGroup;
+			children = (
+				9D66334E2F20C940000BD917 /* StressSample.swift */,
+				9D66334F2F20C940000BD917 /* StressState.swift */,
+				9D6633502F20C940000BD917 /* Palette.swift */,
+				9D6633512F20C940000BD917 /* PetView.swift */,
+			);
+			name = "Complication Shared Sources";
+			sourceTree = "<group>";
+		};
+		9D6633552F20C940000BD917 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9D6633522F20C940000BD917 /* SwiftUI.framework */,
+				9D6633532F20C940000BD917 /* WidgetKit.framework */,
+				9D6633542F20C940000BD917 /* SwiftData.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -128,10 +206,12 @@
 				9D6633222F20C93C000BD917 /* Sources */,
 				9D6633232F20C93C000BD917 /* Frameworks */,
 				9D6633242F20C93C000BD917 /* Resources */,
+				9D66334A2F20C940000BD917 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				9D6633492F20C940000BD917 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				9D66332A2F20C93C000BD917 /* Mochi Watch App */,
@@ -142,6 +222,28 @@
 			productName = "Mochi Watch App";
 			productReference = 9D6633262F20C93C000BD917 /* Mochi Watch App.app */;
 			productType = "com.apple.product-type.application";
+		};
+		9D6633592F20C940000BD917 /* Mochi Complication */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9D66335C2F20C940000BD917 /* Build configuration list for PBXNativeTarget "Mochi Complication" */;
+			buildPhases = (
+				9D6633582F20C940000BD917 /* Sources */,
+				9D6633562F20C940000BD917 /* Frameworks */,
+				9D6633572F20C940000BD917 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				9D66334C2F20C940000BD917 /* Mochi Complication */,
+			);
+			name = "Mochi Complication";
+			packageProductDependencies = (
+			);
+			productName = "Mochi Complication";
+			productReference = 9D66334B2F20C940000BD917 /* Mochi Complication.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -159,7 +261,18 @@
 					9D6633252F20C93C000BD917 = {
 						CreatedOnToolsVersion = 26.2;
 						SystemCapabilities = {
+							com.apple.ApplicationGroups = {
+								enabled = 1;
+							};
 							com.apple.HealthKit = {
+								enabled = 1;
+							};
+						};
+					};
+					9D6633592F20C940000BD917 = {
+						CreatedOnToolsVersion = 26.2;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups = {
 								enabled = 1;
 							};
 						};
@@ -182,6 +295,7 @@
 			targets = (
 				9D6633182F20C93A000BD917 /* Mochi */,
 				9D6633252F20C93C000BD917 /* Mochi Watch App */,
+				9D6633592F20C940000BD917 /* Mochi Complication */,
 			);
 		};
 /* End PBXProject section */
@@ -195,6 +309,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		9D6633242F20C93C000BD917 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9D6633572F20C940000BD917 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -218,6 +339,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9D6633582F20C940000BD917 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9D6633412F20C940000BD917 /* StressSample.swift in Sources */,
+				9D6633422F20C940000BD917 /* StressState.swift in Sources */,
+				9D6633432F20C940000BD917 /* Palette.swift in Sources */,
+				9D6633442F20C940000BD917 /* PetView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -225,6 +357,11 @@
 			isa = PBXTargetDependency;
 			target = 9D6633252F20C93C000BD917 /* Mochi Watch App */;
 			targetProxy = 9D6633282F20C93C000BD917 /* PBXContainerItemProxy */;
+		};
+		9D6633492F20C940000BD917 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9D6633592F20C940000BD917 /* Mochi Complication */;
+			targetProxy = 9D6633482F20C940000BD917 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -412,6 +549,67 @@
 			};
 			name = Release;
 		};
+		9D66335A2F20C940000BD917 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = "Mochi Complication/Mochi Complication.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Mochi Complication/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.skywalker.Mochi.watchkitapp.complication;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		9D66335B2F20C940000BD917 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = "Mochi Complication/Mochi Complication.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Mochi Complication/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.skywalker.Mochi.watchkitapp.complication;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
 		9D6633382F20C93D000BD917 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -507,6 +705,15 @@
 			buildConfigurations = (
 				9D6633382F20C93D000BD917 /* Debug */,
 				9D6633392F20C93D000BD917 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9D66335C2F20C940000BD917 /* Build configuration list for PBXNativeTarget "Mochi Complication" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9D66335A2F20C940000BD917 /* Debug */,
+				9D66335B2F20C940000BD917 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
