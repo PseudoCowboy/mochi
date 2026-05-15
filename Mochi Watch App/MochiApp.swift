@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import HealthKit
 
 @main
 struct Mochi_Watch_AppApp: App {
@@ -14,6 +15,7 @@ struct Mochi_Watch_AppApp: App {
     @State private var heartRateService: HeartRateService
     @State private var viewModel: PetViewModel
     @State private var stressNotifier: StressNotifier
+    @State private var onboarding = OnboardingState()
     private let modelContainer: ModelContainer
 
     init() {
@@ -37,11 +39,21 @@ struct Mochi_Watch_AppApp: App {
         WindowGroup {
             ContentView()
                 .environment(viewModel)
+                .environment(heartRateService)
+                .environment(onboarding)
                 .modelContainer(modelContainer)
+                .sheet(isPresented: Binding(
+                    get: { !onboarding.didCompleteOnboarding && heartRateService.authorizationStatus == .notDetermined },
+                    set: { _ in }
+                )) {
+                    OnboardingView {
+                        onboarding.didCompleteOnboarding = true
+                    }
+                    .environment(heartRateService)
+                    .environment(onboarding)
+                }
                 .task {
                     viewModel.attach(context: modelContainer.mainContext)
-                    // TODO(apollo): drop this implicit auth call once OnboardingView gates first launch.
-                    try? await heartRateService.requestAuthorization()
                     heartRateService.start()
                     await stressNotifier.requestAuthorization()
                     stressNotifier.start()
