@@ -13,12 +13,15 @@ struct Mochi_Watch_AppApp: App {
     @Environment(\.scenePhase) private var scenePhase
     @State private var heartRateService: HeartRateService
     @State private var viewModel: PetViewModel
+    @State private var stressNotifier: StressNotifier
     private let modelContainer: ModelContainer
 
     init() {
         let hr = HeartRateService()
         _heartRateService = State(wrappedValue: hr)
-        _viewModel = State(wrappedValue: PetViewModel(heartRate: hr))
+        let vm = PetViewModel(heartRate: hr)
+        _viewModel = State(wrappedValue: vm)
+        _stressNotifier = State(wrappedValue: StressNotifier(viewModel: vm))
 
         let container: ModelContainer
         do {
@@ -39,6 +42,8 @@ struct Mochi_Watch_AppApp: App {
                     viewModel.attach(context: modelContainer.mainContext)
                     await heartRateService.requestAuthorization()
                     heartRateService.start()
+                    await stressNotifier.requestAuthorization()
+                    stressNotifier.start()
                 }
         }
         .onChange(of: scenePhase) { oldPhase, newPhase in
