@@ -13,9 +13,11 @@ final class StressNotifier {
     private let defaultsKey = "mochi.stressNotifier.lastOverAt"
     private let center = UNUserNotificationCenter.current()
     private let defaults = UserDefaults.standard
+    private let onOver: (() -> Void)?
 
-    init(viewModel: PetViewModel) {
+    init(viewModel: PetViewModel, onOver: (() -> Void)? = nil) {
         self.viewModel = viewModel
+        self.onOver = onOver
     }
 
     func requestAuthorization() async {
@@ -62,6 +64,7 @@ final class StressNotifier {
 
         WKInterfaceDevice.current().play(.notification)
         fireOverNotification()
+        onOver?()
         lastOverFiredAt = now
     }
 
