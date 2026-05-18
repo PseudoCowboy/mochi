@@ -5,10 +5,18 @@ struct ContentView: View {
         NavigationStack {
             PetGlanceView()
                 .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
+                    ToolbarItem(placement: .topBarLeading) {
                         NavigationLink(destination: SettingsView()) {
                             Image(systemName: "gear")
                         }
+                        .accessibilityLabel("Settings")
+                    }
+
+                    ToolbarItem(placement: .topBarTrailing) {
+                        NavigationLink(destination: SummaryView()) {
+                            Image(systemName: "chart.bar.fill")
+                        }
+                        .accessibilityLabel("Daily Summary")
                     }
                 }
         }
