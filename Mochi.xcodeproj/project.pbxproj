@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9D6633272F20C93C000BD917 /* Mochi Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 9D6633262F20C93C000BD917 /* Mochi Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9D6633402F20C940000BD917 /* Mochi Complication.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 9D66334B2F20C940000BD917 /* Mochi Complication.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BEEF00000000000000000001 /* Mochi Summary Widget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BEEF00000000000000000007 /* Mochi Summary Widget.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9D6633412F20C940000BD917 /* StressSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D66334E2F20C940000BD917 /* StressSample.swift */; };
 		9D6633422F20C940000BD917 /* StressState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D66334F2F20C940000BD917 /* StressState.swift */; };
 		9D6633432F20C940000BD917 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6633502F20C940000BD917 /* Palette.swift */; };
@@ -19,6 +20,10 @@
 		9D6633452F20C940000BD917 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D6633522F20C940000BD917 /* SwiftUI.framework */; };
 		9D6633462F20C940000BD917 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D6633532F20C940000BD917 /* WidgetKit.framework */; };
 		9D6633472F20C940000BD917 /* SwiftData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D6633542F20C940000BD917 /* SwiftData.framework */; };
+		BEEF00000000000000000002 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D6633522F20C940000BD917 /* SwiftUI.framework */; };
+		BEEF00000000000000000003 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D6633532F20C940000BD917 /* WidgetKit.framework */; };
+		BEEF00000000000000000004 /* SummarySnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEF00000000000000000008 /* SummarySnapshot.swift */; };
+		BEEF00000000000000000005 /* SummarySnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEF00000000000000000008 /* SummarySnapshot.swift */; };
 		9D6633602F20C941000BD917 /* StressSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D66334E2F20C940000BD917 /* StressSample.swift */; };
 		9D6633612F20C941000BD917 /* StressState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D66334F2F20C940000BD917 /* StressState.swift */; };
 		9D6633622F20C941000BD917 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6633502F20C940000BD917 /* Palette.swift */; };
@@ -39,6 +44,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 9D6633592F20C940000BD917;
 			remoteInfo = "Mochi Complication";
+		};
+		BEEF00000000000000000006 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D6633112F20C939000BD917 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BEEF00000000000000000012;
+			remoteInfo = "Mochi Summary Widget";
 		};
 		AADD0000000000000000000A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -61,6 +73,17 @@
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		BEEF00000000000000000009 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				BEEF00000000000000000001 /* Mochi Summary Widget.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9D66334A2F20C940000BD917 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -78,6 +101,7 @@
 		9D6633192F20C93A000BD917 /* Mochi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mochi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D6633262F20C93C000BD917 /* Mochi Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mochi Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D66334B2F20C940000BD917 /* Mochi Complication.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Mochi Complication.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BEEF00000000000000000007 /* Mochi Summary Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Mochi Summary Widget.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D6633642F20C941000BD917 /* Mochi iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mochi iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AADD00000000000000000002 /* Mochi Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Mochi Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D66334E2F20C940000BD917 /* StressSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Mochi Watch App/Model/StressSample.swift"; sourceTree = "<group>"; };
@@ -89,6 +113,7 @@
 		9D6633522F20C940000BD917 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		9D6633532F20C940000BD917 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		9D6633542F20C940000BD917 /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = System/Library/Frameworks/SwiftData.framework; sourceTree = SDKROOT; };
+		BEEF00000000000000000008 /* SummarySnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SummarySnapshot.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
