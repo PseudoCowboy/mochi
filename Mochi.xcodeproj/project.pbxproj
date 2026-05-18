@@ -111,6 +111,7 @@
 				"Model/PetMaturity.swift" = sourcecode.swift;
 				"Model/StressSample.swift" = sourcecode.swift;
 				"Mochi Watch App.entitlements" = text.plist.entitlements;
+				"Views/BreathView.swift" = sourcecode.swift;
 				"Views/MaturityBadgeView.swift" = sourcecode.swift;
 			};
 			path = "Mochi Watch App";
