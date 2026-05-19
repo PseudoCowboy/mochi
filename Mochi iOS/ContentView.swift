@@ -3,6 +3,7 @@ import SwiftData
 
 struct ContentView: View {
     @Query private var samples: [StressSample]
+    @AppStorage("summaryBackgroundEnabled") private var bgEnabled: Bool = true
     
     init() {
         let twentyFourHoursAgo = Calendar.current.date(byAdding: .hour, value: -24, to: Date()) ?? Date()
@@ -16,6 +17,18 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
+                Toggle("Background updates", isOn: $bgEnabled)
+                    .padding()
+                    .onChange(of: bgEnabled) { _, newValue in
+                        if newValue {
+                            SummaryWriter.startObservingHeartRate()
+                            SummaryWriter.scheduleNext()
+                        } else {
+                            SummaryWriter.stopObservingHeartRate()
+                            SummaryWriter.cancelScheduled()
+                        }
+                    }
+                
                 HStack {
                     Text("Stage: \(PetMaturity.compute(samples: samples).evolutionStage.displayName)")
                         .font(.headline)
