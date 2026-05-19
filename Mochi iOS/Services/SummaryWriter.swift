@@ -134,11 +134,24 @@ enum SummaryWriter {
             print("[SummaryWriter] missing App Group container")
             return false
         }
+        return writeSnapshot(snapshot, to: url, write: { data, target in
+            try data.write(to: target, options: .atomic)
+        })
+    }
+
+    @discardableResult
+    static func writeSnapshot(
+        _ snapshot: SummarySnapshot,
+        to url: URL,
+        write: (Data, URL) throws -> Void = { data, target in
+            try data.write(to: target, options: .atomic)
+        }
+    ) -> Bool {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
         do {
             let data = try encoder.encode(snapshot)
-            try data.write(to: url, options: .atomic)
+            try write(data, url)
             return true
         } catch {
             print("[SummaryWriter] write failed: \(error)")

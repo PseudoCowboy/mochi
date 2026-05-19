@@ -25,14 +25,25 @@ final class BreathSessionViewState {
 actor BreathSession {
     private let totalCycles: Int
     nonisolated let state: BreathSessionViewState
+    nonisolated let inhaleSeconds: Int
+    nonisolated let holdSeconds: Int
+    nonisolated let exhaleSeconds: Int
+    private let tickDuration: Duration
     private var stopped: Bool = false
 
-    private static let inhaleSeconds: Int = 4
-    private static let holdSeconds: Int = 7
-    private static let exhaleSeconds: Int = 8
-
-    init(totalCycles: Int = 3, state: BreathSessionViewState) {
+    init(
+        totalCycles: Int = 3,
+        inhaleSeconds: Int = 4,
+        holdSeconds: Int = 7,
+        exhaleSeconds: Int = 8,
+        tickDuration: Duration = .seconds(1),
+        state: BreathSessionViewState
+    ) {
         self.totalCycles = totalCycles
+        self.inhaleSeconds = inhaleSeconds
+        self.holdSeconds = holdSeconds
+        self.exhaleSeconds = exhaleSeconds
+        self.tickDuration = tickDuration
         self.state = state
     }
 
@@ -48,9 +59,9 @@ actor BreathSession {
         }
 
         let phases: [(BreathPhase, Int)] = [
-            (.inhale, Self.inhaleSeconds),
-            (.hold, Self.holdSeconds),
-            (.exhale, Self.exhaleSeconds)
+            (.inhale, inhaleSeconds),
+            (.hold, holdSeconds),
+            (.exhale, exhaleSeconds)
         ]
 
         cycleLoop: for cycle in 0..<cycles {
@@ -67,7 +78,7 @@ actor BreathSession {
                 for _ in 0..<seconds {
                     if stopped || Task.isCancelled { break cycleLoop }
                     do {
-                        try await Task.sleep(for: .seconds(1))
+                        try await Task.sleep(for: tickDuration)
                     } catch {
                         break cycleLoop
                     }

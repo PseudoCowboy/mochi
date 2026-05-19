@@ -18,13 +18,21 @@ enum DailySummaryStore {
     }
 
     static func save(_ summary: DailySummary, on day: Date) {
+        save(summary, on: day, defaults: .standard)
+    }
+
+    static func save(_ summary: DailySummary, on day: Date, defaults: UserDefaults) {
         if let data = try? JSONEncoder().encode(summary) {
-            UserDefaults.standard.set(data, forKey: key(for: day))
+            defaults.set(data, forKey: key(for: day))
         }
     }
 
     static func load(_ day: Date) -> DailySummary? {
-        guard let data = UserDefaults.standard.data(forKey: key(for: day)),
+        load(day, defaults: .standard)
+    }
+
+    static func load(_ day: Date, defaults: UserDefaults) -> DailySummary? {
+        guard let data = defaults.data(forKey: key(for: day)),
               let summary = try? JSONDecoder().decode(DailySummary.self, from: data) else {
             return nil
         }
@@ -32,6 +40,15 @@ enum DailySummaryStore {
     }
 
     static func currentStreak(asOf now: Date, todayCalm: Int, todayOver: Int) -> Int {
+        currentStreak(asOf: now, todayCalm: todayCalm, todayOver: todayOver, defaults: .standard)
+    }
+
+    static func currentStreak(
+        asOf now: Date,
+        todayCalm: Int,
+        todayOver: Int,
+        defaults: UserDefaults
+    ) -> Int {
         var streak = 0
         if todayCalm >= todayOver && todayCalm > 0 {
             streak += 1
@@ -40,7 +57,7 @@ enum DailySummaryStore {
         let calendar = Calendar.current
         var dateIterator = calendar.date(byAdding: .day, value: -1, to: calendar.startOfDay(for: now)) ?? now.addingTimeInterval(-86400)
 
-        while let summary = load(dateIterator) {
+        while let summary = load(dateIterator, defaults: defaults) {
             if summary.calm >= summary.over && summary.calm > 0 {
                 streak += 1
                 dateIterator = calendar.date(byAdding: .day, value: -1, to: dateIterator) ?? dateIterator.addingTimeInterval(-86400)

@@ -58,7 +58,7 @@ final class StressNotifier {
         guard previous != .over, current == .over else { return }
 
         let now = Date()
-        if let last = lastOverFiredAt, now.timeIntervalSince(last) < throttle {
+        guard Self.shouldFire(now: now, lastFiredAt: lastOverFiredAt, throttle: throttle) else {
             return
         }
 
@@ -66,6 +66,11 @@ final class StressNotifier {
         fireOverNotification()
         onOver?()
         lastOverFiredAt = now
+    }
+
+    static func shouldFire(now: Date, lastFiredAt: Date?, throttle: TimeInterval) -> Bool {
+        guard let last = lastFiredAt else { return true }
+        return now.timeIntervalSince(last) >= throttle
     }
 
     private func fireOverNotification() {
