@@ -28,6 +28,8 @@
 		9D6633612F20C941000BD917 /* StressState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D66334F2F20C940000BD917 /* StressState.swift */; };
 		9D6633622F20C941000BD917 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6633502F20C940000BD917 /* Palette.swift */; };
 		9D6633632F20C941000BD917 /* PetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6633512F20C940000BD917 /* PetView.swift */; };
+		9DFEEDCD2F20C940000BD917 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9DFEEDCC2F20C940000BD917 /* PrivacyInfo.xcprivacy */; };
+		9DFEEDCF2F20C940000BD917 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DFEEDCE2F20C940000BD917 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -114,6 +116,8 @@
 		9D6633532F20C940000BD917 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		9D6633542F20C940000BD917 /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = System/Library/Frameworks/SwiftData.framework; sourceTree = SDKROOT; };
 		BEEF00000000000000000008 /* SummarySnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SummarySnapshot.swift; sourceTree = "<group>"; };
+		9DFEEDCC2F20C940000BD917 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Mochi iOS/PrivacyInfo.xcprivacy"; sourceTree = "<group>"; };
+		9DFEEDCE2F20C940000BD917 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Mochi/Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -124,8 +128,12 @@
 		};
 		9D6633652F20C941000BD917 /* Mochi iOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9DFEEDCB2F20C940000BD917 /* PBXFileSystemSynchronizedBuildFileExceptionSet */,
+			);
 			explicitFileTypes = {
 				"Mochi iOS.entitlements" = text.plist.entitlements;
+				"PrivacyInfo.xcprivacy" = text.plist.xml;
 			};
 			path = "Mochi iOS";
 			sourceTree = "<group>";
@@ -169,6 +177,13 @@
 				"Mochi Complication.entitlements",
 			);
 			target = 9D6633592F20C940000BD917 /* Mochi Complication */;
+		};
+		9DFEEDCB2F20C940000BD917 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"PrivacyInfo.xcprivacy",
+			);
+			target = 9D6633692F20C941000BD917 /* Mochi iOS */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -468,6 +483,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9DFEEDCD2F20C940000BD917 /* PrivacyInfo.xcprivacy in Resources */,
+				9DFEEDCF2F20C940000BD917 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

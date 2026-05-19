@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import plistlib
 import re
 import shutil
 import subprocess
@@ -21,12 +22,13 @@ from pathlib import Path
 
 PROJECT = Path("Mochi.xcodeproj/project.pbxproj")
 SCHEME_DIR = Path("Mochi.xcodeproj/xcshareddata/xcschemes")
+DERIVED_DATA = Path("build/appstore-readiness-derived-data")
 
 BRAND_COLORS = ("BrandPrimary", "BrandAccent", "CalmGreen", "OverOrange")
 REQUIRED_BUILDS = (
     ("Mochi iOS", "generic/platform=iOS"),
     ("Mochi Watch App", "generic/platform=watchOS"),
-    ("Mochi", "generic/platform=watchOS"),
+    ("Mochi Complication", "generic/platform=watchOS"),
 )
 BONUS_BUILDS = (("Mochi Summary Widget", "generic/platform=iOS"),)
 
@@ -103,6 +105,98 @@ def extract_exception_sets(project_text: str) -> list[tuple[str, list[str]]]:
             members = [member.strip().strip('"') for member in members_match.group(1).split(",") if member.strip()]
         exception_sets.append((target, members))
     return exception_sets
+
+
+def section_body(project_text: str, section_name: str) -> str:
+    section_match = re.search(
+        rf"/\* Begin {section_name} section \*/(.*?)/\* End {section_name} section \*/",
+        project_text,
+        flags=re.S,
+    )
+    return section_match.group(1) if section_match else ""
+
+
+def native_target_body(project_text: str, target_name: str) -> str:
+    for match in re.finditer(
+        r"\n\t\t[0-9A-F]+ /\* ([^*]+) \*/ = \{(.*?)\n\t\t\};",
+        section_body(project_text, "PBXNativeTarget"),
+        flags=re.S,
+    ):
+        if match.group(1).strip() == target_name:
+            return match.group(2)
+    return ""
+
+
+def resources_phase_body(project_text: str, phase_id: str) -> str:
+    phase_match = re.search(
+        rf"\n\t\t{re.escape(phase_id)} /\* Resources \*/ = \{{(.*?)\n\t\t\}};",
+        section_body(project_text, "PBXResourcesBuildPhase"),
+        flags=re.S,
+    )
+    return phase_match.group(1) if phase_match else ""
+
+
+def target_resources_body(project_text: str, target_name: str) -> str:
+    target = native_target_body(project_text, target_name)
+    phase_match = re.search(r"\n\t\t\t\t([0-9A-F]+) /\* Resources \*/,", target)
+    return resources_phase_body(project_text, phase_match.group(1)) if phase_match else ""
+
+
+def target_has_resource(project_text: str, target_name: str, resource_comment: str) -> bool:
+    return resource_comment in target_resources_body(project_text, target_name)
+
+
+def target_configuration_ids(project_text: str, target_name: str) -> list[str]:
+    target = native_target_body(project_text, target_name)
+    config_list_match = re.search(r"buildConfigurationList = ([0-9A-F]+) /\*", target)
+    if not config_list_match:
+        return []
+    config_list_id = config_list_match.group(1)
+    list_match = re.search(
+        rf"\n\t\t{re.escape(config_list_id)} /\* .*? \*/ = \{{(.*?)\n\t\t\}};",
+        section_body(project_text, "XCConfigurationList"),
+        flags=re.S,
+    )
+    if not list_match:
+        return []
+    return re.findall(r"\n\t\t\t\t([0-9A-F]+) /\*", list_match.group(1))
+
+
+def configuration_body(project_text: str, config_id: str) -> str:
+    config_match = re.search(
+        rf"\n\t\t{re.escape(config_id)} /\* .*? \*/ = \{{(.*?)\n\t\t\}};",
+        section_body(project_text, "XCBuildConfiguration"),
+        flags=re.S,
+    )
+    return config_match.group(1) if config_match else ""
+
+
+def target_has_build_setting(project_text: str, target_name: str, key: str, value: str) -> bool:
+    config_ids = target_configuration_ids(project_text, target_name)
+    return bool(config_ids) and all(
+        f"{key} = {value};" in configuration_body(project_text, config_id)
+        for config_id in config_ids
+    )
+
+
+def validate_privacy_manifest(path: Path) -> CheckResult:
+    if not path.is_file():
+        return CheckResult(False, f"missing {path}")
+    try:
+        payload = plistlib.loads(path.read_bytes())
+    except plistlib.InvalidFileException as error:
+        return CheckResult(False, f"invalid plist in {path}: {error}")
+    if payload.get("NSPrivacyTracking") is not False:
+        return CheckResult(False, f"{path} must set NSPrivacyTracking to false")
+    accessed = payload.get("NSPrivacyAccessedAPITypes", [])
+    categories = {entry.get("NSPrivacyAccessedAPIType") for entry in accessed}
+    expected = {
+        "NSPrivacyAccessedAPICategoryUserDefaults",
+        "NSPrivacyAccessedAPICategoryFileTimestamp",
+    }
+    if not expected.issubset(categories):
+        return CheckResult(False, f"{path} missing required accessed API categories")
+    return CheckResult(True, f"{path} declares required privacy API categories")
 
 
 def contents_file(asset_dir: Path) -> Path:
@@ -229,6 +323,20 @@ def run_static_checks(reporter: Reporter) -> None:
     else:
         reporter.ok("no PBXFileSystemSynchronizedBuildFileExceptionSet entries are present")
 
+    record_result(reporter, validate_privacy_manifest(Path("Mochi iOS/PrivacyInfo.xcprivacy")))
+    if any(target == "Mochi iOS" and "PrivacyInfo.xcprivacy" in members for target, members in exception_sets):
+        reporter.ok("Mochi iOS synchronized-root exception excludes PrivacyInfo.xcprivacy from implicit membership")
+    else:
+        reporter.fail("Mochi iOS synchronized-root exception must list PrivacyInfo.xcprivacy")
+    if target_has_resource(project_text, "Mochi iOS", "PrivacyInfo.xcprivacy in Resources"):
+        reporter.ok("Mochi iOS resources explicitly include PrivacyInfo.xcprivacy")
+    else:
+        reporter.fail("Mochi iOS resources must explicitly include PrivacyInfo.xcprivacy")
+    if target_has_build_setting(project_text, "Mochi iOS", "ASSETCATALOG_COMPILER_APPICON_NAME", "AppIcon"):
+        reporter.ok("Mochi iOS build configurations use AppIcon")
+    else:
+        reporter.fail("Mochi iOS build configurations must set ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon")
+
     mochi_assets = Path("Mochi/Assets.xcassets")
     watch_assets = Path("Mochi Watch App/Assets.xcassets")
     mochi_ios_assets = Path("Mochi iOS/Assets.xcassets")
@@ -253,11 +361,28 @@ def run_static_checks(reporter: Reporter) -> None:
             record_result(reporter, validate_colorset(mochi_ios_assets, color))
         record_result(reporter, validate_app_icon(mochi_ios_assets, "ios", 3))
         record_result(reporter, validate_image_set(mochi_ios_assets, "LaunchLogo"))
+    elif "Mochi iOS" in schemes and target_has_resource(project_text, "Mochi iOS", "Assets.xcassets in Resources"):
+        reporter.ok("Mochi iOS target explicitly includes shared asset catalog: Mochi/Assets.xcassets")
     elif "Mochi iOS" in schemes:
         reporter.fail(
-            "Mochi iOS scheme targets synchronized root 'Mochi iOS', but that root has no Assets.xcassets; "
-            "BrandPrimary, LaunchLogo, and AppIcon under Mochi/Assets.xcassets will not be picked up by that scheme"
+            "Mochi iOS scheme targets synchronized root 'Mochi iOS', but that root has no Assets.xcassets "
+            "and no explicit shared Assets.xcassets resource; BrandPrimary, LaunchLogo, and AppIcon will not be picked up"
         )
+
+
+def verify_ios_app_privacy_manifest(reporter: Reporter) -> None:
+    apps = sorted(DERIVED_DATA.rglob("Mochi iOS.app"))
+    if not apps:
+        reporter.fail("could not find built Mochi iOS.app under derived data")
+        return
+    app = apps[-1]
+    matches = sorted(app.rglob("PrivacyInfo.xcprivacy"))
+    expected = app / "PrivacyInfo.xcprivacy"
+    if matches == [expected]:
+        reporter.ok(f"PrivacyInfo.xcprivacy is present exactly once at app bundle root: {expected}")
+    else:
+        formatted = ", ".join(str(match) for match in matches) or "no matches"
+        reporter.fail(f"PrivacyInfo.xcprivacy must appear exactly once at {expected}; found {formatted}")
 
 
 def run_build(scheme: str, destination: str, reporter: Reporter) -> None:
@@ -269,12 +394,17 @@ def run_build(scheme: str, destination: str, reporter: Reporter) -> None:
         scheme,
         "-destination",
         destination,
+        "-derivedDataPath",
+        str(DERIVED_DATA),
+        "clean",
         "build",
     ]
     print(f"RUN: {' '.join(command)}")
     completed = subprocess.run(command, text=True)
     if completed.returncode == 0:
         reporter.ok(f"xcodebuild succeeded for {scheme} ({destination})")
+        if scheme == "Mochi iOS":
+            verify_ios_app_privacy_manifest(reporter)
     else:
         reporter.fail(f"xcodebuild failed for {scheme} ({destination}) with exit code {completed.returncode}")
 
@@ -284,6 +414,8 @@ def run_builds(reporter: Reporter, include_bonus: bool) -> None:
         reporter.warn("xcodebuild is unavailable on this host; run this helper on a Mac to verify build schemes")
         return
 
+    if DERIVED_DATA.exists():
+        shutil.rmtree(DERIVED_DATA)
     for scheme, destination in REQUIRED_BUILDS:
         run_build(scheme, destination, reporter)
     if include_bonus:
