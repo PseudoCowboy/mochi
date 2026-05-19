@@ -63,6 +63,13 @@
 			remoteGlobalIDString = 9D6633252F20C93C000BD917;
 			remoteInfo = "Mochi Watch App";
 		};
+		C0DE7E57000000000000000A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D6633112F20C939000BD917 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9D6633692F20C941000BD917;
+			remoteInfo = "Mochi iOS";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -108,6 +115,7 @@
 		BEEF00000000000000000007 /* Mochi Summary Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Mochi Summary Widget.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D6633642F20C941000BD917 /* Mochi iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mochi iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AADD00000000000000000002 /* Mochi Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Mochi Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0DE7E570000000000000001 /* Mochi iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Mochi iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D66334E2F20C940000BD917 /* StressSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Mochi Watch App/Model/StressSample.swift"; sourceTree = "<group>"; };
 		9D66334F2F20C940000BD917 /* StressState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Mochi Watch App/Model/StressState.swift"; sourceTree = "<group>"; };
 		9D6633502F20C940000BD917 /* Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Mochi Watch App/Theme/Palette.swift"; sourceTree = "<group>"; };
@@ -158,6 +166,14 @@
 			path = "Mochi Watch AppTests";
 			sourceTree = "<group>";
 		};
+		C0DE7E570000000000000002 /* Mochi iOSTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C0DE7E57000000000000000C /* PBXFileSystemSynchronizedBuildFileExceptionSet */,
+			);
+			path = "Mochi iOSTests";
+			sourceTree = "<group>";
+		};
 		9D66334C2F20C940000BD917 /* Mochi Complication */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -187,6 +203,13 @@
 				"PrivacyInfo.xcprivacy",
 			);
 			target = 9D6633692F20C941000BD917 /* Mochi iOS */;
+		};
+		C0DE7E57000000000000000C /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				".gitkeep",
+			);
+			target = C0DE7E570000000000000003 /* Mochi iOSTests */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -230,6 +253,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C0DE7E570000000000000005 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -238,6 +268,7 @@
 			children = (
 				9D66331B2F20C93A000BD917 /* Mochi */,
 				9D6633652F20C941000BD917 /* Mochi iOS */,
+				C0DE7E570000000000000002 /* Mochi iOSTests */,
 				9D66332A2F20C93C000BD917 /* Mochi Watch App */,
 				AADD00000000000000000001 /* Mochi Watch AppTests */,
 				9D66334C2F20C940000BD917 /* Mochi Complication */,
@@ -252,6 +283,7 @@
 			children = (
 				9D6633192F20C93A000BD917 /* Mochi.app */,
 				9D6633642F20C941000BD917 /* Mochi iOS.app */,
+				C0DE7E570000000000000001 /* Mochi iOSTests.xctest */,
 				9D6633262F20C93C000BD917 /* Mochi Watch App.app */,
 				9D66334B2F20C940000BD917 /* Mochi Complication.appex */,
 				AADD00000000000000000002 /* Mochi Watch AppTests.xctest */,
@@ -378,6 +410,29 @@
 			productReference = AADD00000000000000000002 /* Mochi Watch AppTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		C0DE7E570000000000000003 /* Mochi iOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0DE7E570000000000000007 /* Build configuration list for PBXNativeTarget "Mochi iOSTests" */;
+			buildPhases = (
+				C0DE7E570000000000000004 /* Sources */,
+				C0DE7E570000000000000005 /* Frameworks */,
+				C0DE7E570000000000000006 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C0DE7E57000000000000000B /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				C0DE7E570000000000000002 /* Mochi iOSTests */,
+			);
+			name = "Mochi iOSTests";
+			packageProductDependencies = (
+			);
+			productName = "Mochi iOSTests";
+			productReference = C0DE7E570000000000000001 /* Mochi iOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		9D6633592F20C940000BD917 /* Mochi Complication */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9D66335C2F20C940000BD917 /* Build configuration list for PBXNativeTarget "Mochi Complication" */;
@@ -427,6 +482,10 @@
 							};
 						};
 					};
+					C0DE7E570000000000000003 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 9D6633692F20C941000BD917;
+					};
 					9D6633252F20C93C000BD917 = {
 						CreatedOnToolsVersion = 26.2;
 						SystemCapabilities = {
@@ -468,6 +527,7 @@
 			targets = (
 				9D6633182F20C93A000BD917 /* Mochi */,
 				9D6633692F20C941000BD917 /* Mochi iOS */,
+				C0DE7E570000000000000003 /* Mochi iOSTests */,
 				9D6633252F20C93C000BD917 /* Mochi Watch App */,
 				AADD00000000000000000003 /* Mochi Watch AppTests */,
 				9D6633592F20C940000BD917 /* Mochi Complication */,
@@ -507,6 +567,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		AADD00000000000000000006 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0DE7E570000000000000006 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -563,6 +630,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C0DE7E570000000000000004 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -580,6 +654,11 @@
 			isa = PBXTargetDependency;
 			target = 9D6633252F20C93C000BD917 /* Mochi Watch App */;
 			targetProxy = AADD0000000000000000000A /* PBXContainerItemProxy */;
+		};
+		C0DE7E57000000000000000B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9D6633692F20C941000BD917 /* Mochi iOS */;
+			targetProxy = C0DE7E57000000000000000A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -982,6 +1061,67 @@
 			};
 			name = Release;
 		};
+		C0DE7E570000000000000008 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.skywalker.Mochi.iosTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Mochi iOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Mochi iOS";
+				TEST_TARGET_NAME = "Mochi iOS";
+			};
+			name = Debug;
+		};
+		C0DE7E570000000000000009 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.skywalker.Mochi.iosTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Mochi iOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Mochi iOS";
+				TEST_TARGET_NAME = "Mochi iOS";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		AADD00000000000000000008 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1096,6 +1236,15 @@
 			buildConfigurations = (
 				9D66336A2F20C941000BD917 /* Debug */,
 				9D66336B2F20C941000BD917 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0DE7E570000000000000007 /* Build configuration list for PBXNativeTarget "Mochi iOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0DE7E570000000000000008 /* Debug */,
+				C0DE7E570000000000000009 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
