@@ -1,6 +1,12 @@
 import SwiftUI
 
 extension Color {
+    // Brand palette
+    static let brandPrimary = Color("BrandPrimary")
+    static let brandAccent = Color("BrandAccent")
+    static let calmGreen = Color("CalmGreen")
+    static let overOrange = Color("OverOrange")
+
     // Stress palette
     static let calm = Color(red: 0.339, green: 0.821, blue: 0.637)  // oklch(78% 0.13 165)
     static let okay = Color(red: 0.881, green: 0.763, blue: 0.293)  // oklch(82% 0.14 95)

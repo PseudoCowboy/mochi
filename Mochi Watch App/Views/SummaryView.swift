@@ -53,6 +53,9 @@ struct SummaryView: View {
                 .font(.footnote)
                 .foregroundColor(.secondary)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(label) minutes today")
+        .accessibilityValue("\(value)")
     }
     
     private var streakBadge: some View {
@@ -69,5 +72,7 @@ struct SummaryView: View {
                 .fill(Color.stressed.opacity(0.2))
         )
         .padding(.top, 4)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(streak) day streak")
     }
 }

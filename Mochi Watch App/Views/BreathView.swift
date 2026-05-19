@@ -34,6 +34,10 @@ struct BreathView: View {
                         }
                     }
                 }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Breathing guide")
+                .accessibilityValue("\(phaseText), \(viewState.remainingSeconds) seconds remaining")
+                .accessibilityAddTraits(.updatesFrequently)
                 
                 Spacer()
                 

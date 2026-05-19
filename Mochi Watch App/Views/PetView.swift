@@ -6,6 +6,15 @@ struct PetView: View {
         case neutral
         case small
         case o
+        
+        var moodDescription: String {
+            switch self {
+            case .smile: return "smiling"
+            case .neutral: return "neutral"
+            case .small: return "serious"
+            case .o: return "surprised"
+            }
+        }
     }
     
     struct MouthShape: Shape {
@@ -42,16 +51,21 @@ struct PetView: View {
     var blink: Bool
     
     var body: some View {
-        switch stage {
-        case .egg:
-            EggBody()
-        case .baby:
-            BabyBody()
-        case .teen:
-            TeenBody(mouth: mouth, blink: blink)
-        case .adult:
-            AdultBody(mouth: mouth, blink: blink)
+        Group {
+            switch stage {
+            case .egg:
+                EggBody()
+            case .baby:
+                BabyBody()
+            case .teen:
+                TeenBody(mouth: mouth, blink: blink)
+            case .adult:
+                AdultBody(mouth: mouth, blink: blink)
+            }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Pet, stage \(stage.displayName)")
+        .accessibilityValue("\(mouth.moodDescription)\(blink ? ", blinking" : "")")
     }
 }
 
