@@ -1,11 +1,9 @@
 import SwiftUI
 
 extension Color {
-    // Brand palette
-    static let brandPrimary = Color("BrandPrimary")
-    static let brandAccent = Color("BrandAccent")
-    static let calmGreen = Color("CalmGreen")
-    static let overOrange = Color("OverOrange")
+    // Brand palette: brandPrimary/brandAccent/calmGreen/overOrange are
+    // auto-generated on Color from the asset catalog by Xcode 15+
+    // (GeneratedAssetSymbols.swift), so we don't redeclare them here.
 
     // Stress palette
     static let calm = Color(red: 0.339, green: 0.821, blue: 0.637)  // oklch(78% 0.13 165)
