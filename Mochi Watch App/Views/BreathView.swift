@@ -10,7 +10,7 @@ struct BreathView: View {
     
     private let autoStart: Bool
 
-    init(viewState: BreathSessionViewState = BreathSessionViewState(), autoStart: Bool = true) {
+    init(viewState: BreathSessionViewState, autoStart: Bool = true) {
         self._viewState = State(initialValue: viewState)
         self.autoStart = autoStart
     }
