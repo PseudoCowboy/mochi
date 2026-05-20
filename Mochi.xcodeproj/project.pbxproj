@@ -26,6 +26,16 @@
 		BEEF00000000000000000004 /* SummarySnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEF00000000000000000008 /* SummarySnapshot.swift */; };
 		BEEF00000000000000000005 /* SummarySnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEF00000000000000000008 /* SummarySnapshot.swift */; };
 		ATL500000000000000000002 /* SummarySnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEF00000000000000000008 /* SummarySnapshot.swift */; };
+		E5A100000000000000000001 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = E5A100000000000000000003 /* SnapshotTesting */; };
+		E5A100000000000000000002 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = E5A100000000000000000003 /* SnapshotTesting */; };
+		E5A100000000000000000005 /* Fixtures+Breath.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A10000000000000000000D /* Fixtures+Breath.swift */; };
+		E5A100000000000000000006 /* Fixtures+Pet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A10000000000000000000E /* Fixtures+Pet.swift */; };
+		E5A100000000000000000007 /* Fixtures+Stress.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A10000000000000000000F /* Fixtures+Stress.swift */; };
+		E5A100000000000000000008 /* Fixtures+Summary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A100000000000000000010 /* Fixtures+Summary.swift */; };
+		E5A100000000000000000009 /* Fixtures+Breath.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A10000000000000000000D /* Fixtures+Breath.swift */; };
+		E5A10000000000000000000A /* Fixtures+Pet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A10000000000000000000E /* Fixtures+Pet.swift */; };
+		E5A10000000000000000000B /* Fixtures+Stress.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A10000000000000000000F /* Fixtures+Stress.swift */; };
+		E5A10000000000000000000C /* Fixtures+Summary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A100000000000000000010 /* Fixtures+Summary.swift */; };
 		9D6633602F20C941000BD917 /* StressSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D66334E2F20C940000BD917 /* StressSample.swift */; };
 		9D6633612F20C941000BD917 /* StressState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D66334F2F20C940000BD917 /* StressState.swift */; };
 		9D6633622F20C941000BD917 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6633502F20C940000BD917 /* Palette.swift */; };
@@ -69,6 +79,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 9D6633692F20C941000BD917;
 			remoteInfo = "Mochi iOS";
+		};
+		E5A100000000000000000013 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D6633112F20C939000BD917 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BEEF00000000000000000012;
+			remoteInfo = "Mochi Summary Widget";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -127,6 +144,10 @@
 		9D6633542F20C940000BD917 /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = System/Library/Frameworks/SwiftData.framework; sourceTree = SDKROOT; };
 		ATL500000000000000000099 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		BEEF00000000000000000008 /* SummarySnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SummarySnapshot.swift; sourceTree = "<group>"; };
+		E5A10000000000000000000D /* Fixtures+Breath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Fixtures+Breath.swift"; sourceTree = "<group>"; };
+		E5A10000000000000000000E /* Fixtures+Pet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Fixtures+Pet.swift"; sourceTree = "<group>"; };
+		E5A10000000000000000000F /* Fixtures+Stress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Fixtures+Stress.swift"; sourceTree = "<group>"; };
+		E5A100000000000000000010 /* Fixtures+Summary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Fixtures+Summary.swift"; sourceTree = "<group>"; };
 		9DFEEDCC2F20C940000BD917 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Mochi iOS/PrivacyInfo.xcprivacy"; sourceTree = "<group>"; };
 		9DFEEDCE2F20C940000BD917 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Mochi/Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -174,6 +195,18 @@
 			path = "Mochi iOSTests";
 			sourceTree = "<group>";
 		};
+		BEEF0000000000000000000A /* Mochi Summary Widget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				BEEF0000000000000000000B /* PBXFileSystemSynchronizedBuildFileExceptionSet */,
+			);
+			explicitFileTypes = {
+				"Info.plist" = text.plist.xml;
+				"Mochi Summary Widget.entitlements" = text.plist.entitlements;
+			};
+			path = "Mochi Summary Widget";
+			sourceTree = "<group>";
+		};
 		9D66334C2F20C940000BD917 /* Mochi Complication */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -189,6 +222,14 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		BEEF0000000000000000000B /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Info.plist",
+				"Mochi Summary Widget.entitlements",
+			);
+			target = BEEF00000000000000000012 /* Mochi Summary Widget */;
+		};
 		9DFEEDCA2F20C940000BD917 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -246,10 +287,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		BEEF0000000000000000000D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BEEF00000000000000000002 /* SwiftUI.framework in Frameworks */,
+				BEEF00000000000000000003 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AADD00000000000000000005 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5A100000000000000000001 /* SnapshotTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,6 +308,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5A100000000000000000002 /* SnapshotTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,6 +323,8 @@
 				C0DE7E570000000000000002 /* Mochi iOSTests */,
 				9D66332A2F20C93C000BD917 /* Mochi Watch App */,
 				AADD00000000000000000001 /* Mochi Watch AppTests */,
+				E5A100000000000000000011 /* TestSupport */,
+				BEEF0000000000000000000A /* Mochi Summary Widget */,
 				9D66334C2F20C940000BD917 /* Mochi Complication */,
 				9D66334D2F20C940000BD917 /* Complication Shared Sources */,
 				9D6633552F20C940000BD917 /* Frameworks */,
@@ -286,6 +340,7 @@
 				C0DE7E570000000000000001 /* Mochi iOSTests.xctest */,
 				9D6633262F20C93C000BD917 /* Mochi Watch App.app */,
 				9D66334B2F20C940000BD917 /* Mochi Complication.appex */,
+				BEEF00000000000000000007 /* Mochi Summary Widget.appex */,
 				AADD00000000000000000002 /* Mochi Watch AppTests.xctest */,
 			);
 			name = Products;
@@ -312,6 +367,17 @@
 				ATL500000000000000000099 /* HealthKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E5A100000000000000000011 /* TestSupport */ = {
+			isa = PBXGroup;
+			children = (
+				E5A10000000000000000000D /* Fixtures+Breath.swift */,
+				E5A10000000000000000000E /* Fixtures+Pet.swift */,
+				E5A10000000000000000000F /* Fixtures+Stress.swift */,
+				E5A100000000000000000010 /* Fixtures+Summary.swift */,
+			);
+			path = TestSupport;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -348,10 +414,12 @@
 				9D6633682F20C941000BD917 /* Sources */,
 				9D6633662F20C941000BD917 /* Frameworks */,
 				9D6633672F20C941000BD917 /* Resources */,
+				BEEF00000000000000000009 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				BEEF0000000000000000000F /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				9D6633652F20C941000BD917 /* Mochi iOS */,
@@ -405,6 +473,7 @@
 			);
 			name = "Mochi Watch AppTests";
 			packageProductDependencies = (
+				E5A100000000000000000003 /* SnapshotTesting */,
 			);
 			productName = "Mochi Watch AppTests";
 			productReference = AADD00000000000000000002 /* Mochi Watch AppTests.xctest */;
@@ -422,16 +491,40 @@
 			);
 			dependencies = (
 				C0DE7E57000000000000000B /* PBXTargetDependency */,
+				E5A100000000000000000012 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				C0DE7E570000000000000002 /* Mochi iOSTests */,
 			);
 			name = "Mochi iOSTests";
 			packageProductDependencies = (
+				E5A100000000000000000003 /* SnapshotTesting */,
 			);
 			productName = "Mochi iOSTests";
 			productReference = C0DE7E570000000000000001 /* Mochi iOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		BEEF00000000000000000012 /* Mochi Summary Widget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BEEF00000000000000000013 /* Build configuration list for PBXNativeTarget "Mochi Summary Widget" */;
+			buildPhases = (
+				BEEF0000000000000000000C /* Sources */,
+				BEEF0000000000000000000D /* Frameworks */,
+				BEEF0000000000000000000E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				BEEF0000000000000000000A /* Mochi Summary Widget */,
+			);
+			name = "Mochi Summary Widget";
+			packageProductDependencies = (
+			);
+			productName = "Mochi Summary Widget";
+			productReference = BEEF00000000000000000007 /* Mochi Summary Widget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 		9D6633592F20C940000BD917 /* Mochi Complication */ = {
 			isa = PBXNativeTarget;
@@ -501,6 +594,14 @@
 						CreatedOnToolsVersion = 26.2;
 						TestTargetID = 9D6633252F20C93C000BD917;
 					};
+					BEEF00000000000000000012 = {
+						CreatedOnToolsVersion = 26.2;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups = {
+								enabled = 1;
+							};
+						};
+					};
 					9D6633592F20C940000BD917 = {
 						CreatedOnToolsVersion = 26.2;
 						SystemCapabilities = {
@@ -520,6 +621,9 @@
 			);
 			mainGroup = 9D6633102F20C939000BD917;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				E5A100000000000000000004 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9D66331A2F20C93A000BD917 /* Products */;
 			projectDirPath = "";
@@ -530,6 +634,7 @@
 				C0DE7E570000000000000003 /* Mochi iOSTests */,
 				9D6633252F20C93C000BD917 /* Mochi Watch App */,
 				AADD00000000000000000003 /* Mochi Watch AppTests */,
+				BEEF00000000000000000012 /* Mochi Summary Widget */,
 				9D6633592F20C940000BD917 /* Mochi Complication */,
 			);
 		};
@@ -560,6 +665,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		9D6633572F20C940000BD917 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BEEF0000000000000000000E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -623,10 +735,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		BEEF0000000000000000000C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BEEF00000000000000000004 /* SummarySnapshot.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AADD00000000000000000004 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5A100000000000000000005 /* Fixtures+Breath.swift in Sources */,
+				E5A100000000000000000006 /* Fixtures+Pet.swift in Sources */,
+				E5A100000000000000000007 /* Fixtures+Stress.swift in Sources */,
+				E5A100000000000000000008 /* Fixtures+Summary.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -634,6 +758,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5A100000000000000000009 /* Fixtures+Breath.swift in Sources */,
+				E5A10000000000000000000A /* Fixtures+Pet.swift in Sources */,
+				E5A10000000000000000000B /* Fixtures+Stress.swift in Sources */,
+				E5A10000000000000000000C /* Fixtures+Summary.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -650,6 +778,16 @@
 			target = 9D6633592F20C940000BD917 /* Mochi Complication */;
 			targetProxy = 9D6633482F20C940000BD917 /* PBXContainerItemProxy */;
 		};
+		BEEF0000000000000000000F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BEEF00000000000000000012 /* Mochi Summary Widget */;
+			targetProxy = BEEF00000000000000000006 /* PBXContainerItemProxy */;
+		};
+		E5A100000000000000000012 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BEEF00000000000000000012 /* Mochi Summary Widget */;
+			targetProxy = E5A100000000000000000013 /* PBXContainerItemProxy */;
+		};
 		AADD0000000000000000000B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9D6633252F20C93C000BD917 /* Mochi Watch App */;
@@ -661,6 +799,25 @@
 			targetProxy = C0DE7E57000000000000000A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E5A100000000000000000004 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.15.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E5A100000000000000000003 /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E5A100000000000000000004 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCBuildConfiguration section */
 		9D6633312F20C93D000BD917 /* Debug */ = {
@@ -980,6 +1137,67 @@
 			};
 			name = Release;
 		};
+		BEEF00000000000000000010 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = "Mochi Summary Widget/Mochi Summary Widget.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Mochi Summary Widget/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.skywalker.Mochi.ios.SummaryWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BEEF00000000000000000011 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = "Mochi Summary Widget/Mochi Summary Widget.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Mochi Summary Widget/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.skywalker.Mochi.ios.SummaryWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		9D66336A2F20C941000BD917 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1227,6 +1445,15 @@
 			buildConfigurations = (
 				9D66335A2F20C940000BD917 /* Debug */,
 				9D66335B2F20C940000BD917 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BEEF00000000000000000013 /* Build configuration list for PBXNativeTarget "Mochi Summary Widget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BEEF00000000000000000010 /* Debug */,
+				BEEF00000000000000000011 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
