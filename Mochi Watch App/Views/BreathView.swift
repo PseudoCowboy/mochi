@@ -4,9 +4,16 @@ import Observation
 struct BreathView: View {
     @Environment(\.dismiss) private var dismiss
     
-    @State private var viewState = BreathSessionViewState()
+    @State private var viewState: BreathSessionViewState
     @State private var session: BreathSession?
     @State private var circleScale: CGFloat = 0.6
+    
+    private let autoStart: Bool
+
+    init(viewState: BreathSessionViewState = BreathSessionViewState(), autoStart: Bool = true) {
+        self._viewState = State(initialValue: viewState)
+        self.autoStart = autoStart
+    }
     
     var body: some View {
         ZStack {

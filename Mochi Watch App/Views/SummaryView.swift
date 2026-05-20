@@ -3,10 +3,18 @@ import SwiftData
 
 struct SummaryView: View {
     @Environment(\.modelContext) private var modelContext
+    var now: Date
     
-    @State private var calmMinutes: Int = 0
-    @State private var overMinutes: Int = 0
-    @State private var streak: Int = 0
+    @State private var calmMinutes: Int
+    @State private var overMinutes: Int
+    @State private var streak: Int
+    
+    init(now: Date = .now, calmMinutes: Int = 0, overMinutes: Int = 0, streak: Int = 0) {
+        self.now = now
+        self._calmMinutes = State(initialValue: calmMinutes)
+        self._overMinutes = State(initialValue: overMinutes)
+        self._streak = State(initialValue: streak)
+    }
     
     var body: some View {
         VStack(spacing: 8) {
@@ -26,14 +34,14 @@ struct SummaryView: View {
         }
         .task {
             let reader = StressHistoryReader(context: modelContext)
-            let calm = (try? reader.calmMinutesToday(now: .now)) ?? 0
-            let over = (try? reader.overMinutesToday(now: .now)) ?? 0
+            let calm = (try? reader.calmMinutesToday(now: now)) ?? 0
+            let over = (try? reader.overMinutesToday(now: now)) ?? 0
             
             calmMinutes = calm
             overMinutes = over
             
-            DailySummaryStore.save(DailySummary(calm: calm, over: over), on: .now)
-            streak = DailySummaryStore.currentStreak(asOf: .now, todayCalm: calm, todayOver: over)
+            DailySummaryStore.save(DailySummary(calm: calm, over: over), on: now)
+            streak = DailySummaryStore.currentStreak(asOf: now, todayCalm: calm, todayOver: over)
         }
     }
     
