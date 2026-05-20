@@ -2,6 +2,20 @@ import Foundation
 import HealthKit
 import Observation
 
+protocol HKHealthStoreProtocol: AnyObject {
+    func authorizationStatus(for type: HKObjectType) -> HKAuthorizationStatus
+    func execute(_ query: HKQuery)
+    func stop(_ query: HKQuery)
+}
+
+extension HKHealthStore: HKHealthStoreProtocol {}
+
+/// Constructs an active observer-like handle for `type` and arranges for `onFire`
+/// to be invoked each time a new sample is delivered. The returned value is the
+/// handle the caller is expected to retain (and later stop). Default uses a real
+/// `HKAnchoredObjectQuery` running against the underlying store.
+typealias HKObserverQueryStarter = (HKQuantityType, @escaping @MainActor () -> Void) -> Any
+
 @Observable
 final class HeartRateService {
     enum AuthState {
@@ -21,9 +35,11 @@ final class HeartRateService {
     private(set) var authState: AuthState = .notDetermined
     private(set) var authorizationStatus: HKAuthorizationStatus = .notDetermined
 
-    @ObservationIgnored private let store = HKHealthStore()
+    @ObservationIgnored private let store: HKHealthStoreProtocol
+    @ObservationIgnored private let observerStarter: HKObserverQueryStarter?
     @ObservationIgnored private var anchor: HKQueryAnchor?
     @ObservationIgnored private var query: HKAnchoredObjectQuery?
+    @ObservationIgnored private(set) var observerHandle: Any?
 
     private var heartRateType: HKQuantityType? {
         HKQuantityType.quantityType(forIdentifier: .heartRate)
@@ -33,7 +49,12 @@ final class HeartRateService {
         HKUnit.count().unitDivided(by: .minute())
     }
 
-    init() {
+    init(
+        store: HKHealthStoreProtocol = HKHealthStore(),
+        observerStarter: HKObserverQueryStarter? = nil
+    ) {
+        self.store = store
+        self.observerStarter = observerStarter
         guard HKHealthStore.isHealthDataAvailable(), let hrType = heartRateType else {
             authState = .unavailable
             return
@@ -57,7 +78,9 @@ final class HeartRateService {
         let readTypes: Set<HKObjectType> = [hrType]
         let shareTypes: Set<HKSampleType> = []
 
-        try await store.requestAuthorization(toShare: shareTypes, read: readTypes)
+        if let concreteStore = store as? HKHealthStore {
+            try await concreteStore.requestAuthorization(toShare: shareTypes, read: readTypes)
+        }
         let status = store.authorizationStatus(for: hrType)
         await MainActor.run {
             self.authorizationStatus = status
@@ -67,9 +90,19 @@ final class HeartRateService {
     }
 
     func start() {
-        guard authState == .authorized, query == nil, let hrType = heartRateType else {
+        guard authState == .authorized, let hrType = heartRateType else {
             return
         }
+
+        if let starter = observerStarter {
+            guard observerHandle == nil else { return }
+            observerHandle = starter(hrType) { [weak self] in
+                self?.handleObserverFire()
+            }
+            return
+        }
+
+        guard query == nil else { return }
 
         let q = HKAnchoredObjectQuery(
             type: hrType,
@@ -93,6 +126,10 @@ final class HeartRateService {
             store.stop(q)
             query = nil
         }
+        if let handle = observerHandle as? HKQuery {
+            store.stop(handle)
+        }
+        observerHandle = nil
     }
 
     private static func mapAuthState(from status: HKAuthorizationStatus) -> AuthState {
@@ -106,6 +143,14 @@ final class HeartRateService {
         @unknown default:
             return .notDetermined
         }
+    }
+
+    /// Test-visible counter incremented every time an injected observer fires.
+    /// Production observers go through `handle(samples:newAnchor:)` directly.
+    @ObservationIgnored private(set) var observerFireCount: Int = 0
+
+    private func handleObserverFire() {
+        observerFireCount &+= 1
     }
 
     private func handle(samples: [HKSample]?, newAnchor: HKQueryAnchor?) {

@@ -32,6 +32,8 @@
 		E5A100000000000000000006 /* Fixtures+Pet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A10000000000000000000E /* Fixtures+Pet.swift */; };
 		E5A100000000000000000007 /* Fixtures+Stress.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A10000000000000000000F /* Fixtures+Stress.swift */; };
 		E5A100000000000000000008 /* Fixtures+Summary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A100000000000000000010 /* Fixtures+Summary.swift */; };
+		ATL700000000000000000005 /* Fakes+BGTaskScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = ATL700000000000000000003 /* Fakes+BGTaskScheduler.swift */; };
+		ATL700000000000000000002 /* Fakes+HealthKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = ATL700000000000000000004 /* Fakes+HealthKit.swift */; };
 		E5A100000000000000000009 /* Fixtures+Breath.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A10000000000000000000D /* Fixtures+Breath.swift */; };
 		E5A10000000000000000000A /* Fixtures+Pet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A10000000000000000000E /* Fixtures+Pet.swift */; };
 		E5A10000000000000000000B /* Fixtures+Stress.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A10000000000000000000F /* Fixtures+Stress.swift */; };
@@ -148,6 +150,8 @@
 		E5A10000000000000000000E /* Fixtures+Pet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Fixtures+Pet.swift"; sourceTree = "<group>"; };
 		E5A10000000000000000000F /* Fixtures+Stress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Fixtures+Stress.swift"; sourceTree = "<group>"; };
 		E5A100000000000000000010 /* Fixtures+Summary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Fixtures+Summary.swift"; sourceTree = "<group>"; };
+		ATL700000000000000000003 /* Fakes+BGTaskScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Fakes+BGTaskScheduler.swift"; sourceTree = "<group>"; };
+		ATL700000000000000000004 /* Fakes+HealthKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Fakes+HealthKit.swift"; sourceTree = "<group>"; };
 		9DFEEDCC2F20C940000BD917 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Mochi iOS/PrivacyInfo.xcprivacy"; sourceTree = "<group>"; };
 		9DFEEDCE2F20C940000BD917 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Mochi/Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -376,6 +380,8 @@
 				E5A10000000000000000000E /* Fixtures+Pet.swift */,
 				E5A10000000000000000000F /* Fixtures+Stress.swift */,
 				E5A100000000000000000010 /* Fixtures+Summary.swift */,
+				ATL700000000000000000003 /* Fakes+BGTaskScheduler.swift */,
+				ATL700000000000000000004 /* Fakes+HealthKit.swift */,
 			);
 			path = TestSupport;
 			sourceTree = "<group>";
@@ -751,6 +757,7 @@
 				E5A100000000000000000006 /* Fixtures+Pet.swift in Sources */,
 				E5A100000000000000000007 /* Fixtures+Stress.swift in Sources */,
 				E5A100000000000000000008 /* Fixtures+Summary.swift in Sources */,
+				ATL700000000000000000002 /* Fakes+HealthKit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -762,6 +769,7 @@
 				E5A10000000000000000000A /* Fixtures+Pet.swift in Sources */,
 				E5A10000000000000000000B /* Fixtures+Stress.swift in Sources */,
 				E5A10000000000000000000C /* Fixtures+Summary.swift in Sources */,
+				ATL700000000000000000005 /* Fakes+BGTaskScheduler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -3,6 +3,25 @@ import BackgroundTasks
 import HealthKit
 import SwiftData
 
+protocol BGTaskSchedulerProtocol {
+    @discardableResult
+    func register(
+        forTaskWithIdentifier identifier: String,
+        using queue: DispatchQueue?,
+        launchHandler: @escaping (BGTask) -> Void
+    ) -> Bool
+    func submit(_ taskRequest: BGTaskRequest) throws
+}
+
+extension BGTaskScheduler: BGTaskSchedulerProtocol {}
+
+protocol RefreshTaskCompletable: AnyObject {
+    var expirationHandler: (() -> Void)? { get set }
+    func setTaskCompleted(success: Bool)
+}
+
+extension BGTask: RefreshTaskCompletable {}
+
 enum SummaryWriter {
     static let bgTaskIdentifier = "com.pseudocowboy.mochi.summary.refresh"
     static let defaultsKey = "summaryBackgroundEnabled"
@@ -14,7 +33,8 @@ enum SummaryWriter {
     private static let healthStore = HKHealthStore()
     private static var observerQuery: HKObserverQuery?
 
-    static func register(_ scheduler: BGTaskScheduler) {
+    @discardableResult
+    static func register(_ scheduler: BGTaskSchedulerProtocol = BGTaskScheduler.shared) -> Bool {
         scheduler.register(forTaskWithIdentifier: bgTaskIdentifier, using: nil) { task in
             guard let refreshTask = task as? BGAppRefreshTask else {
                 task.setTaskCompleted(success: false)
@@ -36,16 +56,36 @@ enum SummaryWriter {
         }
     }
 
-    static func scheduleNext() {
-        let enabled = (UserDefaults.standard.object(forKey: defaultsKey) as? Bool) ?? true
-        guard enabled else { return }
+    /// Test-visible handler entry point. Writes a snapshot to `writeURL` via the
+    /// caller-supplied `writer` and reports completion through the task. Synchronous
+    /// so tests can drive a fake task without waiting on a detached Task.
+    @discardableResult
+    static func handle(
+        task: any RefreshTaskCompletable,
+        writeURL: URL,
+        writer: (URL) -> Bool
+    ) -> Bool {
+        let ok = writer(writeURL)
+        task.setTaskCompleted(success: ok)
+        return ok
+    }
+
+    @discardableResult
+    static func scheduleNext(
+        scheduler: BGTaskSchedulerProtocol = BGTaskScheduler.shared,
+        defaults: UserDefaults = .standard
+    ) -> Bool {
+        let enabled = (defaults.object(forKey: defaultsKey) as? Bool) ?? true
+        guard enabled else { return false }
 
         let request = BGAppRefreshTaskRequest(identifier: bgTaskIdentifier)
         request.earliestBeginDate = Date().addingTimeInterval(refreshInterval)
         do {
-            try BGTaskScheduler.shared.submit(request)
+            try scheduler.submit(request)
+            return true
         } catch {
             print("[SummaryWriter] scheduleNext submit failed: \(error)")
+            return false
         }
     }
 
