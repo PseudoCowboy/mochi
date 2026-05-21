@@ -30,6 +30,7 @@ final class SummaryWriterBGTaskIntegrationTests: XCTestCase {
         XCTAssertEqual(scheduler.registerCalls.first?.identifier, SummaryWriter.bgTaskIdentifier)
         XCTAssertEqual(scheduler.registerCalls.first?.identifier, "com.pseudocowboy.mochi.summary.refresh")
         XCTAssertNil(scheduler.registerCalls.first?.queue, "register should pass nil queue (main)")
+        XCTAssertNotNil(scheduler.registerCalls.first?.launchHandler, "scheduler must receive a launch handler closure")
     }
 
     func testHandleWritesSnapshotAndMarksTaskCompletedSuccess() throws {

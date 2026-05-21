@@ -70,6 +70,19 @@ final class HeartRateServiceObserverWiringTests: XCTestCase {
         XCTAssertEqual(handles().count, 1, "repeated start() calls must not stack observers")
     }
 
+    func testStopClearsObserverHandle() {
+        let store = FakeHealthStore()
+        store.stubbedAuthorizationStatus = .sharingAuthorized
+        let (starter, _) = makeStarter()
+        let service = HeartRateService(store: store, observerStarter: starter)
+
+        service.start()
+        XCTAssertNotNil(service.observerHandle, "starting while authorized should retain an observer handle")
+
+        service.stop()
+        XCTAssertNil(service.observerHandle, "stop() must clear the observer handle")
+    }
+
     func testObserverFireFlowsBackIntoService() throws {
         guard HKQuantityType.quantityType(forIdentifier: .heartRate) != nil else {
             throw XCTSkip("HealthKit did not vend the heart-rate quantity type in this runtime")
