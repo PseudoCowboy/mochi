@@ -1,15 +1,14 @@
 import Foundation
 import BackgroundTasks
-
-#if canImport(Mochi_iOS)
 @testable import Mochi_iOS
-#endif
 
 final class FakeBGTaskScheduler: BGTaskSchedulerProtocol {
     struct RegisterCall {
         let identifier: String
         let queue: DispatchQueue?
-        let launchHandler: (BGTask) -> Void
+        let handler: (BGTask) -> Void
+
+        var launchHandler: (BGTask) -> Void { handler }
     }
 
     private(set) var registerCalls: [RegisterCall] = []
@@ -23,7 +22,7 @@ final class FakeBGTaskScheduler: BGTaskSchedulerProtocol {
         using queue: DispatchQueue?,
         launchHandler: @escaping (BGTask) -> Void
     ) -> Bool {
-        registerCalls.append(.init(identifier: identifier, queue: queue, launchHandler: launchHandler))
+        registerCalls.append(.init(identifier: identifier, queue: queue, handler: launchHandler))
         return registerReturnValue
     }
 

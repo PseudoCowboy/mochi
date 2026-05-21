@@ -36,7 +36,7 @@ final class SummaryWriterBGTaskIntegrationTests: XCTestCase {
     func testHandleWritesSnapshotAndMarksTaskCompletedSuccess() throws {
         let url = tempDir.appendingPathComponent("summary.json")
         let task = FakeBGAppRefreshTask()
-        let snapshot = SummarySnapshot(calmMinutes: 7, overMinutes: 1, streak: 4, asOf: Date(timeIntervalSince1970: 1_700_000_000))
+        let snapshot = SummarySnapshotFixtures.standard()
 
         let ok = SummaryWriter.handle(task: task, writeURL: url) { target in
             SummaryWriter.writeSnapshot(snapshot, to: target)

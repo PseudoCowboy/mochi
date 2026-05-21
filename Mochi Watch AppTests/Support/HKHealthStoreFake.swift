@@ -1,15 +1,20 @@
 import Foundation
 import HealthKit
-
-#if canImport(Mochi_Watch_App)
 @testable import Mochi_Watch_App
-#endif
 
-final class FakeHealthStore: HKHealthStoreProtocol {
+final class FakeHKHealthStore: HKHealthStoreProtocol {
     var stubbedAuthorizationStatus: HKAuthorizationStatus = .notDetermined
     private(set) var authorizationLookups: [HKObjectType] = []
     private(set) var executedQueries: [HKQuery] = []
     private(set) var stoppedQueries: [HKQuery] = []
+
+    var status: HKAuthorizationStatus {
+        get { stubbedAuthorizationStatus }
+        set { stubbedAuthorizationStatus = newValue }
+    }
+
+    var executed: [HKQuery] { executedQueries }
+    var stopped: [HKQuery] { stoppedQueries }
 
     func authorizationStatus(for type: HKObjectType) -> HKAuthorizationStatus {
         authorizationLookups.append(type)
@@ -24,6 +29,8 @@ final class FakeHealthStore: HKHealthStoreProtocol {
         stoppedQueries.append(query)
     }
 }
+
+typealias FakeHealthStore = FakeHKHealthStore
 
 /// Records that an observer was started for a given quantity type and lets the
 /// test invoke the registered callback to simulate HealthKit delivering a new
