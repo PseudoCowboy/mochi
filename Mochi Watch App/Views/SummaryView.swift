@@ -9,6 +9,8 @@ struct SummaryView: View {
     @State private var overMinutes: Int
     @State private var streak: Int
     
+    @State private var selectedTab: Int = 0 // 0 for 24H, 1 for Week
+    
     init(now: Date = .now, calmMinutes: Int = 0, overMinutes: Int = 0, streak: Int = 0) {
         self.now = now
         self._calmMinutes = State(initialValue: calmMinutes)
@@ -16,22 +18,82 @@ struct SummaryView: View {
         self._streak = State(initialValue: streak)
     }
     
+    let hourlyData: [Double] = [
+        0.1, 0.1, 0.1, 0.1, 0.1, 0.2, // 0-5
+        0.3, 0.5, 0.6, 0.7, 0.8, 0.7, // 6-11
+        0.6, 0.7, 0.8, 0.9, 0.8, 0.7, // 12-17
+        0.6, 0.5, 0.4, 0.3, 0.2, 0.1  // 18-23
+    ]
+    
+    let dailyData: [Double] = [0.4, 0.5, 0.6, 0.5, 0.7, 0.3, 0.2]
+    
     var body: some View {
         VStack(spacing: 8) {
-            Text("TODAY")
-                .font(.caption)
+            HStack(spacing: 0) {
+                Text("24H")
+                    .font(.caption2)
+                    .fontWeight(selectedTab == 0 ? .bold : .regular)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 4)
+                    .background(selectedTab == 0 ? Color.white.opacity(0.2) : Color.clear)
+                    .cornerRadius(4)
+                    .onTapGesture { selectedTab = 0 }
+                
+                Text("Week")
+                    .font(.caption2)
+                    .fontWeight(selectedTab == 1 ? .bold : .regular)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 4)
+                    .background(selectedTab == 1 ? Color.white.opacity(0.2) : Color.clear)
+                    .cornerRadius(4)
+                    .onTapGesture { selectedTab = 1 }
+            }
+            .padding(2)
+            .background(Color.white.opacity(0.1))
+            .cornerRadius(6)
+            .frame(height: 28)
+            
+            Text(selectedTab == 0 ? "Stress · 24H" : "Stress · Week")
+                .font(.caption2)
                 .foregroundColor(.secondary)
                 .fontWeight(.bold)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
-            HStack(spacing: 16) {
-                metricView(value: calmMinutes, label: "Calm", color: .calm)
-                metricView(value: overMinutes, label: "Over", color: .over)
+            GeometryReader { geo in
+                HStack(alignment: .bottom, spacing: selectedTab == 0 ? 2 : 8) {
+                    let data = selectedTab == 0 ? hourlyData : dailyData
+                    ForEach(data.indices, id: \.self) { index in
+                        let value = data[index]
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(colorForValue(value))
+                            .frame(height: max(geo.size.height * CGFloat(value), 4))
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .bottom)
             }
+            .frame(height: 50)
             
-            if streak >= 2 {
-                streakBadge
+            HStack {
+                if selectedTab == 0 {
+                    Text("0").frame(maxWidth: .infinity, alignment: .leading)
+                    Text("6").frame(maxWidth: .infinity, alignment: .center)
+                    Text("12").frame(maxWidth: .infinity, alignment: .center)
+                    Text("18").frame(maxWidth: .infinity, alignment: .trailing)
+                } else {
+                    let days = ["M", "T", "W", "T", "F", "S", "S"]
+                    ForEach(days.indices, id: \.self) { index in
+                        Text(days[index]).frame(maxWidth: .infinity)
+                    }
+                }
             }
+            .font(.system(size: 10))
+            .foregroundColor(.secondary)
+            
+            Text(selectedTab == 0 ? "Peak: 90 at 3pm" : "Peak: 70 on Friday")
+                .font(.caption2)
+                .foregroundColor(.secondary)
         }
+        .padding(.horizontal, 4)
         .task {
             let reader = StressHistoryReader(context: modelContext)
             let calm = (try? reader.calmMinutesToday(now: now)) ?? 0
@@ -45,42 +107,10 @@ struct SummaryView: View {
         }
     }
     
-    private func metricView(value: Int, label: String, color: Color) -> some View {
-        VStack(spacing: 0) {
-            HStack(alignment: .firstTextBaseline, spacing: 2) {
-                Text("\(value)")
-                    .font(.system(size: 36, weight: .bold, design: .rounded))
-                    .foregroundColor(color)
-                
-                Text("min")
-                    .font(.caption2)
-                    .foregroundColor(color)
-            }
-            
-            Text(label)
-                .font(.footnote)
-                .foregroundColor(.secondary)
-        }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(label) minutes today")
-        .accessibilityValue("\(value)")
-    }
-    
-    private var streakBadge: some View {
-        HStack(spacing: 4) {
-            Text("🔥 \(streak) day streak")
-                .font(.footnote)
-                .fontWeight(.semibold)
-                .foregroundColor(.stressed)
-        }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 4)
-        .background(
-            Capsule()
-                .fill(Color.stressed.opacity(0.2))
-        )
-        .padding(.top, 4)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(streak) day streak")
+    private func colorForValue(_ value: Double) -> Color {
+        if value < 0.33 { return .calm }
+        else if value < 0.66 { return .okay }
+        else if value < 0.85 { return .stressed }
+        else { return .over }
     }
 }

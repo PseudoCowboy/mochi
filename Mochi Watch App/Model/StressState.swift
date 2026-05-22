@@ -44,6 +44,24 @@ enum StressState: Int, CaseIterable, Identifiable {
         }
     }
     
+    var stateEmoji: String {
+        switch self {
+        case .calm: return "😌"
+        case .okay: return "🙂"
+        case .stressed: return "😣"
+        case .over: return "😵"
+        }
+    }
+    
+    var gaugeProgress: Double {
+        switch self {
+        case .calm: return 0.0
+        case .okay: return 0.33
+        case .stressed: return 0.66
+        case .over: return 1.0
+        }
+    }
+    
     var ringSegments: Int {
         switch self {
         case .calm: return 1
