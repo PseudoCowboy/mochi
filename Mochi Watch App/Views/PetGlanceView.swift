@@ -1,160 +1,110 @@
 import SwiftUI
 import Combine
 
+/// Main stress glance view. Single hero gauge with center avatar,
+/// large numeric value below, and the rating label at the bottom.
+/// The pet/maturity affordances live elsewhere (Summary, Pet evolution).
 struct PetGlanceView: View {
     @Environment(PetViewModel.self) var viewModel
-    @State private var blink: Bool = false
-    @State private var pulsePhase: Bool = false
-    
+
     // For manual rotation in simulator
     @State private var crownValue: Double = 0.0
-    
-    let timer = Timer.publish(every: 4.2, on: .main, in: .common).autoconnect()
-    
+
+    private var hrvCaption: String {
+        "Last HRV · \(viewModel.hrvMs)ms · 15m ago"
+    }
+
     var body: some View {
-        VStack(spacing: 0) {
-            // Status pill and Time row
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 2) {
-                    HStack(spacing: 4) {
-                        Circle()
-                            .fill(viewModel.state.headlineColor)
-                            .frame(width: 6, height: 6)
-                            .shadow(color: viewModel.state.headlineColor.opacity(0.8), radius: 3)
-                        
-                        Text(viewModel.state.label)
-                            .font(.system(size: 10, weight: .bold))
-                            .foregroundColor(viewModel.state.headlineColor)
-                    }
-                    MaturityBadgeView(level: viewModel.maturity)
+        ZStack {
+            Color.black.ignoresSafeArea()
+
+            VStack(spacing: 0) {
+                // Hero gauge with center avatar
+                ZStack {
+                    StressGaugeView(progress: viewModel.state.gaugeProgress, lineWidth: 14, tickCount: 24)
+                        .frame(width: 174, height: 174)
+                    CurvedGaugeCaption(text: hrvCaption)
+                    Text(viewModel.state.stateEmoji)
+                        .font(.system(size: 38))
+                        .offset(y: 10)
                 }
-                Spacer()
-                Text(Date(), format: .dateTime.hour().minute())
-                    .font(.system(size: 26, weight: .bold, design: .rounded))
-                    .foregroundColor(viewModel.state.headlineColor)
-            }
-            .padding(.horizontal, 8)
-            .padding(.top, 4)
-            
-            // Pet Stage
-            ZStack {
-                // Glow
-                Circle()
-                    .fill(
-                        RadialGradient(gradient: Gradient(colors: [viewModel.state.headlineColor, Color.clear]), center: .center, startRadius: 0, endRadius: 65)
-                    )
-                    .frame(width: 130, height: 130)
-                    .opacity(viewModel.state == .over ? (pulsePhase ? 1.0 : 0.6) : 0.25)
-                    .blur(radius: 6)
-                    .animation(
-                        viewModel.state == .over
-                            ? .easeInOut(duration: 0.5).repeatForever(autoreverses: true)
-                            : .default,
-                        value: pulsePhase
-                    )
-                
-                PetView(stage: viewModel.evolutionStage, mouth: viewModel.state.mouthShape, blink: blink)
-                    .frame(width: 90, height: 90)
-                    .animation(.easeInOut(duration: 0.4), value: viewModel.state.mouthShape)
-                
-                // Speech bubble
-                VStack {
-                    HStack {
-                        Spacer()
-                        Text(viewModel.state.speech)
-                            .font(.system(size: 10, weight: .bold, design: .rounded))
-                            .foregroundColor(Color(white: 0.15))
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(Color.white)
-                            .cornerRadius(10)
-                            .shadow(color: Color.black.opacity(0.3), radius: 4, y: 2)
-                            .overlay(
-                                // speech bubble tail
-                                Triangle()
-                                    .fill(Color.white)
-                                    .frame(width: 8, height: 6)
-                                    .rotationEffect(.degrees(180))
-                                    .offset(x: -12, y: 3),
-                                alignment: .bottomTrailing
-                            )
-                    }
-                    Spacer()
+                .padding(.top, 22)
+                .padding(.horizontal, 6)
+
+                // Big numeric value
+                Text("\(max(viewModel.hrvMs, viewModel.bpm))")
+                    .font(.system(size: 38, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white)
+                    .padding(.top, -12)
+
+                // Rating
+                HStack(spacing: 4) {
+                    Text("✨")
+                        .font(.system(size: 12))
+                    Text(viewModel.state.label)
+                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                        .foregroundStyle(viewModel.state.headlineColor)
+                    Text("✨")
+                        .font(.system(size: 12))
                 }
-                .padding(.trailing, 4)
-                .padding(.top, -10)
+                .padding(.top, 2)
+
+                Spacer(minLength: 0)
             }
-            .frame(height: 110)
-            .onReceive(timer) { _ in
-                blink = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                    blink = false
-                }
-            }
-            .onTapGesture {
-#if targetEnvironment(simulator)
-                withAnimation {
-                    viewModel.cycle()
-                }
-#endif
-            }
-            
-            // Message
-            VStack(spacing: 2) {
-                Text(viewModel.state.label.uppercased())
-                    .font(.system(size: 9, weight: .bold))
-                    .tracking(1.2)
-                    .foregroundColor(viewModel.state.headlineColor)
-                
-                Text(viewModel.state.message)
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundColor(.white)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(2)
-                    .frame(height: 28)
-            }
-            .padding(.horizontal, 4)
-            
-            Spacer(minLength: 4)
-            
-            // Metrics
-            MetricRow(bpm: viewModel.bpm, hrv: viewModel.hrvMs)
-                .padding(.bottom, 6)
-            
-            // Stress Ring
-            StressRingView(segments: viewModel.state.ringSegments, activeColor: viewModel.state.headlineColor)
-                .padding(.bottom, 4)
+            .padding(.bottom, 4)
         }
         .focusable()
-        .digitalCrownRotation($crownValue, from: 0, through: 100, by: 10, sensitivity: .low, isContinuous: true, isHapticFeedbackEnabled: true)
+        .digitalCrownRotation($crownValue, from: 0, through: 100, by: 10,
+                              sensitivity: .low, isContinuous: true,
+                              isHapticFeedbackEnabled: true)
         .onChange(of: crownValue) { old, new in
 #if targetEnvironment(simulator)
             if abs(new - old) >= 10 {
-                withAnimation {
-                    viewModel.cycle()
-                }
-                crownValue = new > old ? 0 : 100 // Reset to avoid hitting limits
+                withAnimation { viewModel.cycle() }
+                crownValue = new > old ? 0 : 100
             }
 #endif
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.black)
-    }
-}
-
-// Simple triangle shape for speech bubble tail
-struct Triangle: Shape {
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        path.move(to: CGPoint(x: rect.minX, y: rect.minY))
-        path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
-        path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
-        path.closeSubpath()
-        return path
+        .onTapGesture {
+#if targetEnvironment(simulator)
+            withAnimation { viewModel.cycle() }
+#endif
+        }
     }
 }
 
 #Preview {
     PetGlanceView()
         .environment(PetViewModel())
+}
+
+private struct CurvedGaugeCaption: View {
+    let text: String
+
+    private let radius: CGFloat = 54
+    private let arcDegrees: Double = 112
+
+    var body: some View {
+        let characters = Array(text)
+
+        ZStack {
+            ForEach(characters.indices, id: \.self) { index in
+                let angle = angle(for: index, count: characters.count)
+
+                Text(String(characters[index]))
+                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white.opacity(0.95))
+                    .offset(y: -radius)
+                    .rotationEffect(.degrees(angle))
+            }
+        }
+        .frame(width: 142, height: 142)
+        .allowsHitTesting(false)
+        .accessibilityLabel(Text(text))
+    }
+
+    private func angle(for index: Int, count: Int) -> Double {
+        guard count > 1 else { return 0 }
+        return (-arcDegrees / 2) + (arcDegrees * Double(index) / Double(count - 1))
+    }
 }
