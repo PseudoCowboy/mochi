@@ -72,4 +72,28 @@ final class SummaryWriterBGTaskIntegrationTests: XCTestCase {
 
         XCTAssertEqual(task.completionResults, [true, true], "each handle call should complete the task exactly once")
     }
+
+    func testScheduleNextRoutesThroughInjectedScheduler() throws {
+        let scheduler = FakeBGTaskScheduler()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: "SummaryWriterBGTaskIntegrationTests-\(UUID().uuidString)"))
+        defaults.set(true, forKey: SummaryWriter.defaultsKey)
+
+        let ok = SummaryWriter.scheduleNext(scheduler: scheduler, defaults: defaults)
+
+        XCTAssertTrue(ok)
+        XCTAssertEqual(scheduler.submittedRequests.count, 1, "scheduleNext must route exactly one submit through the injected scheduler")
+        XCTAssertEqual(scheduler.submittedRequests.first?.identifier, SummaryWriter.bgTaskIdentifier)
+        XCTAssertTrue(scheduler.submittedRequests.first is BGAppRefreshTaskRequest, "scheduled request must be an app-refresh request")
+    }
+
+    func testScheduleNextDoesNotSubmitWhenDisabled() throws {
+        let scheduler = FakeBGTaskScheduler()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: "SummaryWriterBGTaskIntegrationTests-\(UUID().uuidString)"))
+        defaults.set(false, forKey: SummaryWriter.defaultsKey)
+
+        let ok = SummaryWriter.scheduleNext(scheduler: scheduler, defaults: defaults)
+
+        XCTAssertFalse(ok)
+        XCTAssertTrue(scheduler.submittedRequests.isEmpty, "scheduleNext must not submit when background refresh is disabled")
+    }
 }
