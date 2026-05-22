@@ -1,0 +1,3 @@
+# Privacy
+
+Mochi processes Apple Health heart-rate and HRV samples entirely on the user's iPhone and Apple Watch to compute an on-device stress estimate; no health data, identifiers, or usage telemetry ever leaves the device. The app contains no analytics SDKs, no third-party trackers, no advertising, and makes no network requests. Apple's accessed-API declarations in `PrivacyInfo.xcprivacy` cover only `UserDefaults` (reason `CA92.1`, app's own preferences) and file-timestamp reads (reason `C617.1`, used to surface when the latest on-device summary was generated). No data is collected for the purposes of Apple's privacy nutrition labels.
