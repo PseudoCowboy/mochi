@@ -1,272 +1,158 @@
-#!/usr/bin/env node
-// Generate full iOS + watchOS AppIcon raster sets and rewrite their
-// Contents.json manifests. Idempotent: re-running produces no diff.
-//
-// Reuses the existing 1024x1024 default-light source PNGs produced by
-// generate_icons.js (Mochi/Assets.xcassets/AppIcon.appiconset/icon-1024.png
-// and Mochi Watch App/Assets.xcassets/AppIcon.appiconset/icon-1024.png) as
-// the downscale source for all sized variants. Preserves the existing
-// iOS dark/tinted 1024 variants (icon-dark-1024.png, icon-tinted-1024.png)
-// unchanged.
+import fs from 'fs/promises';
+import path from 'path';
+import { Jimp } from 'jimp';
+import sharp from 'sharp';
 
-import { promises as fs } from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import sharp from "sharp";
+async function createIconBuffer(bgColorHex, fgColorHex, eyeColorHex) {
+    const img = new Jimp({ width: 1024, height: 1024, color: bgColorHex });
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const REPO_ROOT = path.resolve(__dirname, "..");
-
-const IOS_SET = path.join(
-    REPO_ROOT,
-    "Mochi",
-    "Assets.xcassets",
-    "AppIcon.appiconset"
-);
-const WATCH_SET = path.join(
-    REPO_ROOT,
-    "Mochi Watch App",
-    "Assets.xcassets",
-    "AppIcon.appiconset"
-);
-
-// ---------- iOS spec ----------
-// iPhone sized entries (20/29/40/60 at applicable scales) plus the
-// two iPad-only sizes (76, 83.5) the work-item explicitly requires.
-// Existing universal 1024 entries (default, dark, tinted) are preserved
-// as marketing/appearance slots; dark/tinted stay 1024-only per spec.
-const IOS_SIZED = [
-    { idiom: "iphone", size: 20, scale: 2 },
-    { idiom: "iphone", size: 20, scale: 3 },
-    { idiom: "iphone", size: 29, scale: 2 },
-    { idiom: "iphone", size: 29, scale: 3 },
-    { idiom: "iphone", size: 40, scale: 2 },
-    { idiom: "iphone", size: 40, scale: 3 },
-    { idiom: "iphone", size: 60, scale: 2 },
-    { idiom: "iphone", size: 60, scale: 3 },
-    { idiom: "ipad",   size: 76,   scale: 2 },
-    { idiom: "ipad",   size: 83.5, scale: 2 },
-];
-
-// ---------- watchOS spec ----------
-// Apple AppIcon for watchOS — full role/subtype matrix.
-const WATCH_SIZED = [
-    { size: 24,    scale: 2, role: "notificationCenter", subtype: "38mm" },
-    { size: 27.5,  scale: 2, role: "notificationCenter", subtype: "42mm" },
-    { size: 29,    scale: 2, role: "companionSettings" },
-    { size: 29,    scale: 3, role: "companionSettings" },
-    { size: 33,    scale: 2, role: "notificationCenter", subtype: "45mm" },
-    { size: 40,    scale: 2, role: "appLauncher",        subtype: "38mm" },
-    { size: 44,    scale: 2, role: "appLauncher",        subtype: "40mm" },
-    { size: 50,    scale: 2, role: "appLauncher",        subtype: "44mm" },
-    { size: 86,    scale: 2, role: "quickLook",          subtype: "38mm" },
-    { size: 98,    scale: 2, role: "quickLook",          subtype: "42mm" },
-    { size: 108,   scale: 2, role: "quickLook",          subtype: "44mm" },
-];
-
-// Format a size value as Apple's spec writes it: integers without a
-// trailing ".0" but preserving fractional values (83.5, 27.5).
-function fmt(n) {
-    return Number.isInteger(n) ? String(n) : String(n);
-}
-
-// Pixel dimension after applying scale; rounded to the nearest pixel
-// (only 83.5@2x = 167, 27.5@2x = 55, 33@2x = 66, all exact).
-function pixelDim(size, scale) {
-    return Math.round(size * scale);
-}
-
-// Filename convention: icon-<size>[@<scale>x][-<idiom>].png
-// iPad entries are suffixed with "-ipad" to disambiguate from iPhone
-// entries that share size+scale (e.g. 40@2x exists on both).
-function iosFilename(entry) {
-    const sizeStr = fmt(entry.size);
-    const scaleStr = `@${entry.scale}x`;
-    const idiomTag = entry.idiom === "ipad" ? "-ipad" : "";
-    return `icon-${sizeStr}${scaleStr}${idiomTag}.png`;
-}
-
-function watchFilename(entry) {
-    const sizeStr = fmt(entry.size);
-    const scaleStr = `@${entry.scale}x`;
-    // Disambiguate same-size@scale entries by role/subtype.
-    const tags = [entry.role];
-    if (entry.subtype) tags.push(entry.subtype);
-    return `icon-${sizeStr}${scaleStr}-${tags.join("-")}.png`;
-}
-
-async function ensureSizedPng(srcBuffer, outPath, pixels) {
-    // Idempotent: only rewrite if the file is missing or its byte content
-    // would actually change. sharp output is deterministic for fixed
-    // inputs, so byte compare is reliable.
-    const rendered = await sharp(srcBuffer)
-        .resize(pixels, pixels, { fit: "cover", kernel: "lanczos3" })
-        .png({ compressionLevel: 9, adaptiveFiltering: false, palette: false })
-        .toBuffer();
-
-    let existing = null;
-    try {
-        existing = await fs.readFile(outPath);
-    } catch (e) {
-        if (e.code !== "ENOENT") throw e;
-    }
-    if (existing && existing.equals(rendered)) return false;
-    await fs.writeFile(outPath, rendered);
-    return true;
-}
-
-async function writeJsonIfChanged(outPath, obj) {
-    const serialized = JSON.stringify(obj, null, 2) + "\n";
-    let existing = null;
-    try {
-        existing = await fs.readFile(outPath, "utf8");
-    } catch (e) {
-        if (e.code !== "ENOENT") throw e;
-    }
-    if (existing === serialized) return false;
-    await fs.writeFile(outPath, serialized, "utf8");
-    return true;
-}
-
-// Remove any icon-*.png in the set directory that the new manifest no
-// longer references. Keeps the marketing/appearance 1024 PNGs in the
-// preserve list. Skips Contents.json and any non-PNG files. Returns the
-// list of removed filenames so the run summary can report on it.
-async function pruneOrphans(setDir, keepFilenames) {
-    const keep = new Set(keepFilenames);
-    const entries = await fs.readdir(setDir);
-    const removed = [];
-    for (const name of entries) {
-        if (!name.toLowerCase().endsWith(".png")) continue;
-        if (keep.has(name)) continue;
-        await fs.unlink(path.join(setDir, name));
-        removed.push(name);
-    }
-    return removed;
-}
-
-async function generateIos() {
-    const srcPath = path.join(IOS_SET, "icon-1024.png");
-    const srcBuffer = await fs.readFile(srcPath);
-
-    const imagesGenerated = [];
-    for (const entry of IOS_SIZED) {
-        const filename = iosFilename(entry);
-        const px = pixelDim(entry.size, entry.scale);
-        const outPath = path.join(IOS_SET, filename);
-        const changed = await ensureSizedPng(srcBuffer, outPath, px);
-        imagesGenerated.push({ entry, filename, px, changed });
+    for(let y=0; y<1024; y++){
+        for(let x=0; x<1024; x++){
+            const dx = x - 512;
+            const dy = y - 512;
+            if (dx*dx + dy*dy <= 300*300) {
+                img.setPixelColor(fgColorHex, x, y);
+            }
+            
+            // Eyes
+            const dxE1 = x - 452;
+            const dyE1 = y - 472;
+            if (dxE1*dxE1 + dyE1*dyE1 <= 40*40) {
+                img.setPixelColor(eyeColorHex, x, y);
+            }
+            
+            const dxE2 = x - 572;
+            const dyE2 = y - 472;
+            if (dxE2*dxE2 + dyE2*dyE2 <= 40*40) {
+                img.setPixelColor(eyeColorHex, x, y);
+            }
+        }
     }
 
-    // Build Contents.json. Order: sized entries (iphone then ipad), then
-    // the preserved universal 1024 entries (default, dark, tinted).
-    const images = [];
-    for (const { entry, filename } of imagesGenerated) {
-        images.push({
-            filename,
-            idiom: entry.idiom,
-            scale: `${entry.scale}x`,
-            size: `${fmt(entry.size)}x${fmt(entry.size)}`,
-        });
+    for(let y=0; y<1024; y++){
+        for(let x=0; x<1024; x++){
+            if (y > 550) {
+                const dxS = x - 512;
+                const dyS = y - 550;
+                const dist = Math.sqrt(dxS*dxS + dyS*dyS);
+                if (dist >= 80 && dist <= 120 && dxS >= -98 && dxS <= 98) {
+                    img.setPixelColor(eyeColorHex, x, y);
+                }
+                
+                const dxEnd1 = x - 414;
+                const dyEnd1 = y - 570;
+                if (dxEnd1*dxEnd1 + dyEnd1*dyEnd1 <= 20*20) {
+                    img.setPixelColor(eyeColorHex, x, y);
+                }
+                const dxEnd2 = x - 610;
+                const dyEnd2 = y - 570;
+                if (dxEnd2*dxEnd2 + dyEnd2*dyEnd2 <= 20*20) {
+                    img.setPixelColor(eyeColorHex, x, y);
+                }
+            }
+        }
     }
-    // Preserve dark/tinted + default-light universal 1024 entries.
-    images.push({
-        filename: "icon-1024.png",
-        idiom: "universal",
-        platform: "ios",
-        size: "1024x1024",
-    });
-    images.push({
-        appearances: [{ appearance: "luminosity", value: "dark" }],
-        filename: "icon-dark-1024.png",
-        idiom: "universal",
-        platform: "ios",
-        size: "1024x1024",
-    });
-    images.push({
-        appearances: [{ appearance: "luminosity", value: "tinted" }],
-        filename: "icon-tinted-1024.png",
-        idiom: "universal",
-        platform: "ios",
-        size: "1024x1024",
-    });
-
-    const manifest = {
-        images,
-        info: { author: "xcode", version: 1 },
-    };
-    const manifestPath = path.join(IOS_SET, "Contents.json");
-    const manifestChanged = await writeJsonIfChanged(manifestPath, manifest);
-
-    const keep = images.map((i) => i.filename);
-    const removed = await pruneOrphans(IOS_SET, keep);
-
-    const sizedChanged = imagesGenerated.filter((g) => g.changed).length;
-    console.log(
-        `iOS: ${imagesGenerated.length} sized PNGs (${sizedChanged} written, ` +
-        `${removed.length} pruned), ` +
-        `manifest ${manifestChanged ? "rewritten" : "unchanged"}`
-    );
+    
+    return await img.getBuffer('image/png');
 }
 
-async function generateWatch() {
-    const srcPath = path.join(WATCH_SET, "icon-1024.png");
-    const srcBuffer = await fs.readFile(srcPath);
+async function writeContentsJson(dir, json) {
+    await fs.writeFile(path.join(dir, 'Contents.json'), JSON.stringify(json, null, 2));
+}
 
-    const imagesGenerated = [];
-    for (const entry of WATCH_SIZED) {
-        const filename = watchFilename(entry);
-        const px = pixelDim(entry.size, entry.scale);
-        const outPath = path.join(WATCH_SET, filename);
-        const changed = await ensureSizedPng(srcBuffer, outPath, px);
-        imagesGenerated.push({ entry, filename, px, changed });
+async function run() {
+    const iosDir = 'Mochi/Assets.xcassets/AppIcon.appiconset';
+    const watchDir = 'Mochi Watch App/Assets.xcassets/AppIcon.appiconset';
+
+    // The color is #FF9F7A for BrandPrimary light. Add FF for alpha
+    const lightBg = 0xFF9F7AFF;
+    const darkBg = 0x191919FF;
+    const tintedBg = 0x000000FF;
+
+    const baseBufferLight = await createIconBuffer(lightBg, 0xFFFFFFFF, lightBg);
+    const baseBufferDark = await createIconBuffer(darkBg, 0xFFFFFFFF, darkBg);
+    const baseBufferTinted = await createIconBuffer(tintedBg, 0xFF9F7AFF, tintedBg);
+    
+    await fs.mkdir(iosDir, { recursive: true });
+    await fs.mkdir(watchDir, { recursive: true });
+
+    // Ensure 1024 icons exist for iOS
+    await sharp(baseBufferLight).png().toFile(path.join(iosDir, 'icon-1024.png'));
+    await sharp(baseBufferDark).png().toFile(path.join(iosDir, 'icon-dark-1024.png'));
+    await sharp(baseBufferTinted).png().toFile(path.join(iosDir, 'icon-tinted-1024.png'));
+
+    // iOS config matching the one we read
+    const iosImages = [
+        { size: 20, idiom: "iphone", scales: [2, 3] },
+        { size: 29, idiom: "iphone", scales: [2, 3] },
+        { size: 40, idiom: "iphone", scales: [2, 3] },
+        { size: 60, idiom: "iphone", scales: [2, 3] },
+        { size: 76, idiom: "ipad", scales: [2] },
+        { size: 83.5, idiom: "ipad", scales: [2] }
+    ];
+
+    const iosContents = { images: [], info: { author: "xcode", version: 1 } };
+    
+    for (const spec of iosImages) {
+        for (const scale of spec.scales) {
+            const dim = spec.size * scale;
+            const suffix = spec.idiom === 'ipad' ? '-ipad' : '';
+            const filename = `icon-${spec.size}@${scale}x${suffix}.png`;
+            await sharp(baseBufferLight).resize(dim, dim).png().toFile(path.join(iosDir, filename));
+            iosContents.images.push({
+                size: `${spec.size}x${spec.size}`,
+                idiom: spec.idiom,
+                filename: filename,
+                scale: `${scale}x`
+            });
+        }
     }
 
-    const images = [];
-    for (const { entry, filename } of imagesGenerated) {
-        const obj = {
-            filename,
+    // Add universal 1024 and dark/tinted variants
+    iosContents.images.push({ size: "1024x1024", idiom: "universal", platform: "ios", filename: "icon-1024.png" });
+    iosContents.images.push({ size: "1024x1024", idiom: "universal", platform: "ios", filename: "icon-dark-1024.png", appearances: [{ appearance: "luminosity", value: "dark" }] });
+    iosContents.images.push({ size: "1024x1024", idiom: "universal", platform: "ios", filename: "icon-tinted-1024.png", appearances: [{ appearance: "luminosity", value: "tinted" }] });
+
+    await writeContentsJson(iosDir, iosContents);
+
+    // Watch config matching the one we read
+    const watchContents = { images: [], info: { author: "xcode", version: 1 } };
+    const watchImages = [
+        { size: 24, role: "notificationCenter", subtype: "38mm", scale: 2 },
+        { size: 27.5, role: "notificationCenter", subtype: "42mm", scale: 2 },
+        { size: 29, role: "companionSettings", scale: 2 },
+        { size: 29, role: "companionSettings", scale: 3 },
+        { size: 33, role: "notificationCenter", subtype: "45mm", scale: 2 },
+        { size: 40, role: "appLauncher", subtype: "38mm", scale: 2 },
+        { size: 44, role: "appLauncher", subtype: "40mm", scale: 2 },
+        { size: 50, role: "appLauncher", subtype: "44mm", scale: 2 },
+        { size: 86, role: "quickLook", subtype: "38mm", scale: 2 },
+        { size: 98, role: "quickLook", subtype: "42mm", scale: 2 },
+        { size: 108, role: "quickLook", subtype: "44mm", scale: 2 },
+    ];
+
+    for (const spec of watchImages) {
+        const dim = spec.size * spec.scale;
+        const sub = spec.subtype ? `-${spec.subtype}` : '';
+        const filename = `icon-${spec.size}@${spec.scale}x-${spec.role}${sub}.png`;
+        await sharp(baseBufferLight).resize(dim, dim).png().toFile(path.join(watchDir, filename));
+        
+        const entry = {
+            size: `${spec.size}x${spec.size}`,
             idiom: "watch",
-            role: entry.role,
-            scale: `${entry.scale}x`,
-            size: `${fmt(entry.size)}x${fmt(entry.size)}`,
+            role: spec.role,
+            filename: filename,
+            scale: `${spec.scale}x`
         };
-        if (entry.subtype) obj.subtype = entry.subtype;
-        images.push(obj);
+        if (spec.subtype) entry.subtype = spec.subtype;
+        watchContents.images.push(entry);
     }
-    // Marketing 1024 — preserved.
-    images.push({
-        filename: "icon-1024.png",
-        idiom: "watch-marketing",
-        scale: "1x",
-        size: "1024x1024",
-    });
+    
+    // Add marketing icon
+    await sharp(baseBufferLight).png().toFile(path.join(watchDir, 'icon-1024.png'));
+    watchContents.images.push({ size: "1024x1024", idiom: "watch-marketing", filename: "icon-1024.png", scale: "1x" });
 
-    const manifest = {
-        images,
-        info: { author: "xcode", version: 1 },
-    };
-    const manifestPath = path.join(WATCH_SET, "Contents.json");
-    const manifestChanged = await writeJsonIfChanged(manifestPath, manifest);
-
-    const keep = images.map((i) => i.filename);
-    const removed = await pruneOrphans(WATCH_SET, keep);
-
-    const sizedChanged = imagesGenerated.filter((g) => g.changed).length;
-    console.log(
-        `watchOS: ${imagesGenerated.length} sized PNGs (${sizedChanged} written, ` +
-        `${removed.length} pruned), ` +
-        `manifest ${manifestChanged ? "rewritten" : "unchanged"}`
-    );
+    await writeContentsJson(watchDir, watchContents);
 }
 
-async function main() {
-    await generateIos();
-    await generateWatch();
-}
-
-main().catch((err) => {
-    console.error(err);
-    process.exit(1);
-});
+run().catch(console.error);

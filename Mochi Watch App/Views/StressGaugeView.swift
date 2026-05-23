@@ -45,6 +45,10 @@ struct StressGaugeView: View {
                 indicatorDot(radius: radius, computedLineWidth: lineWidth)
             }
             .frame(width: geo.size.width, height: geo.size.height)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Stress Gauge")
+            .accessibilityValue("\(Int(progress * 100)) percent")
+            .accessibilityHint("Double tap to cycle states")
         }
         .aspectRatio(1, contentMode: .fit)
     }

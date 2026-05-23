@@ -30,16 +30,17 @@ struct BreathView: View {
                     
                     VStack(spacing: 4) {
                         Text(phaseText)
-                            .font(.system(size: 20, weight: .bold, design: .rounded))
+                            .font(.title3.weight(.bold))
                             .foregroundColor(.white)
                             .multilineTextAlignment(.center)
                         
                         if viewState.remainingSeconds > 0 {
                             Text("\(viewState.remainingSeconds)")
-                                .font(.system(size: 16, weight: .semibold, design: .rounded))
+                                .font(.headline.weight(.semibold))
                                 .foregroundColor(.white.opacity(0.8))
                         }
                     }
+                    .dynamicTypeSize(.small ... .accessibility2)
                 }
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel("Breathing guide")
@@ -54,7 +55,8 @@ struct BreathView: View {
                         dismiss()
                     }
                 }
-                .font(.system(size: 14, weight: .semibold, design: .rounded))
+                .font(.footnote.weight(.semibold))
+                .dynamicTypeSize(.small ... .accessibility2)
                 .buttonStyle(.bordered)
                 .tint(Color.muted)
                 .padding(.bottom, 8)
