@@ -38,6 +38,10 @@ struct SummaryView: View {
                     .background(selectedTab == 0 ? Color.white.opacity(0.2) : Color.clear)
                     .cornerRadius(4)
                     .onTapGesture { selectedTab = 0 }
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel("24H tab")
+                    .accessibilityValue(selectedTab == 0 ? "Selected" : "Not Selected")
+                    .accessibilityHint("Double-tap to view 24 hours data")
                 
                 Text("Week")
                     .font(.caption2)
@@ -47,51 +51,98 @@ struct SummaryView: View {
                     .background(selectedTab == 1 ? Color.white.opacity(0.2) : Color.clear)
                     .cornerRadius(4)
                     .onTapGesture { selectedTab = 1 }
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel("Week tab")
+                    .accessibilityValue(selectedTab == 1 ? "Selected" : "Not Selected")
+                    .accessibilityHint("Double-tap to view weekly data")
             }
             .padding(2)
             .background(Color.white.opacity(0.1))
             .cornerRadius(6)
             .frame(height: 28)
             
-            Text(selectedTab == 0 ? "Stress · 24H" : "Stress · Week")
-                .font(.caption2)
-                .foregroundColor(.secondary)
-                .fontWeight(.bold)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            GeometryReader { geo in
-                HStack(alignment: .bottom, spacing: selectedTab == 0 ? 2 : 8) {
-                    let data = selectedTab == 0 ? hourlyData : dailyData
-                    ForEach(data.indices, id: \.self) { index in
-                        let value = data[index]
-                        RoundedRectangle(cornerRadius: 2)
-                            .fill(colorForValue(value))
-                            .frame(height: max(geo.size.height * CGFloat(value), 4))
+            TabView(selection: $selectedTab) {
+                VStack(spacing: 8) {
+                    Text("Stress · 24H")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    GeometryReader { geo in
+                        HStack(alignment: .bottom, spacing: 2) {
+                            ForEach(hourlyData.indices, id: \.self) { index in
+                                let value = hourlyData[index]
+                                RoundedRectangle(cornerRadius: 2)
+                                    .fill(colorForValue(value))
+                                    .frame(height: max(geo.size.height * CGFloat(value), 4))
+                                    .accessibilityElement(children: .ignore)
+                                    .accessibilityLabel("Hour \((index * 6) % 24) gauge")
+                                    .accessibilityValue("\(Int(value * 100)) percent")
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .bottom)
                     }
-                }
-                .frame(maxWidth: .infinity, alignment: .bottom)
-            }
-            .frame(height: 50)
-            
-            HStack {
-                if selectedTab == 0 {
-                    Text("0").frame(maxWidth: .infinity, alignment: .leading)
-                    Text("6").frame(maxWidth: .infinity, alignment: .center)
-                    Text("12").frame(maxWidth: .infinity, alignment: .center)
-                    Text("18").frame(maxWidth: .infinity, alignment: .trailing)
-                } else {
-                    let days = ["M", "T", "W", "T", "F", "S", "S"]
-                    ForEach(days.indices, id: \.self) { index in
-                        Text(days[index]).frame(maxWidth: .infinity)
+                    .frame(height: 50)
+                    
+                    HStack {
+                        Text("0").frame(maxWidth: .infinity, alignment: .leading)
+                        Text("6").frame(maxWidth: .infinity, alignment: .center)
+                        Text("12").frame(maxWidth: .infinity, alignment: .center)
+                        Text("18").frame(maxWidth: .infinity, alignment: .trailing)
                     }
+                    .font(.caption2)
+                    .dynamicTypeSize(.small ... .accessibility2)
+                    .foregroundColor(.secondary)
+                    
+                    Text("Peak: 90 at 3pm")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
                 }
+                .tag(0)
+                .accessibilityElement(children: .combine)
+                
+                VStack(spacing: 8) {
+                    Text("Stress · Week")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    GeometryReader { geo in
+                        HStack(alignment: .bottom, spacing: 8) {
+                            ForEach(dailyData.indices, id: \.self) { index in
+                                let value = dailyData[index]
+                                RoundedRectangle(cornerRadius: 2)
+                                    .fill(colorForValue(value))
+                                    .frame(height: max(geo.size.height * CGFloat(value), 4))
+                                    .accessibilityElement(children: .ignore)
+                                    .accessibilityLabel("Day \(index + 1) gauge")
+                                    .accessibilityValue("\(Int(value * 100)) percent")
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .bottom)
+                    }
+                    .frame(height: 50)
+                    
+                    HStack {
+                        let days = ["M", "T", "W", "T", "F", "S", "S"]
+                        ForEach(days.indices, id: \.self) { index in
+                            Text(days[index]).frame(maxWidth: .infinity)
+                        }
+                    }
+                    .font(.caption2)
+                    .dynamicTypeSize(.small ... .accessibility2)
+                    .foregroundColor(.secondary)
+                    
+                    Text("Peak: 70 on Friday")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                }
+                .tag(1)
+                .accessibilityElement(children: .combine)
             }
-            .font(.system(size: 10))
-            .foregroundColor(.secondary)
-            
-            Text(selectedTab == 0 ? "Peak: 90 at 3pm" : "Peak: 70 on Friday")
-                .font(.caption2)
-                .foregroundColor(.secondary)
+            .tabViewStyle(.page(indexDisplayMode: .never))
         }
         .padding(.horizontal, 4)
         .task {

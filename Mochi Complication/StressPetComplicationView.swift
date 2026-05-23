@@ -48,6 +48,8 @@ struct StressPetComplicationView: View {
             }
             .widgetAccentable()
             .accessibilityLabel(Text(entry.state.label))
+            .accessibilityValue(Text("\(entry.bpm) BPM"))
+            .accessibilityHint(Text("Double-tap to open Mochi"))
             
         case .accessoryCorner:
             ZStack {
@@ -62,6 +64,8 @@ struct StressPetComplicationView: View {
                 Text(entry.state.label)
             }
             .accessibilityLabel(Text(entry.state.label))
+            .accessibilityValue(Text("\(entry.bpm) BPM"))
+            .accessibilityHint(Text("Double-tap to open Mochi"))
             
         default:
             Text(entry.state.label)

@@ -26,12 +26,14 @@ struct SettingsView: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
+                    .dynamicTypeSize(.small ... .accessibility3)
                 }
                 
                 if heartRate.authorizationStatus == .sharingDenied {
                     Text("Open the Health app on iPhone → Sharing → Mochi")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
+                        .dynamicTypeSize(.small ... .accessibility3)
                 }
             }
         }

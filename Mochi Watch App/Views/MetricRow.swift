@@ -8,12 +8,13 @@ struct MetricRow: View {
         HStack(spacing: 4) {
             VStack(alignment: .leading, spacing: 0) {
                 Text("♥ BPM")
-                    .font(.system(size: 8, weight: .bold))
+                    .font(.caption2.weight(.bold))
                     .foregroundColor(.gray)
                 Text("\(bpm)")
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .font(.title3.weight(.bold))
                     .foregroundColor(Color(red: 0.9, green: 0.3, blue: 0.3)) // Coral
             }
+            .dynamicTypeSize(.small ... .accessibility2)
             .padding(.horizontal, 6)
             .padding(.vertical, 4)
             .background(Color.gray.opacity(0.2))
@@ -21,17 +22,18 @@ struct MetricRow: View {
             
             VStack(alignment: .leading, spacing: 0) {
                 Text("HRV")
-                    .font(.system(size: 8, weight: .bold))
+                    .font(.caption2.weight(.bold))
                     .foregroundColor(.gray)
                 HStack(alignment: .lastTextBaseline, spacing: 1) {
                     Text("\(hrv)")
-                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                        .font(.title3.weight(.bold))
                         .foregroundColor(.white)
                     Text("ms")
-                        .font(.system(size: 8, weight: .semibold))
+                        .font(.caption2.weight(.semibold))
                         .foregroundColor(.gray)
                 }
             }
+            .dynamicTypeSize(.small ... .accessibility2)
             .padding(.horizontal, 6)
             .padding(.vertical, 4)
             .background(Color.gray.opacity(0.2))

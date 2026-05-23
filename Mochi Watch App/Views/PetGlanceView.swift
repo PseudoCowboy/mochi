@@ -25,7 +25,8 @@ struct PetGlanceView: View {
                         .frame(width: 174, height: 174)
                     CurvedGaugeCaption(text: hrvCaption)
                     Text(viewModel.state.stateEmoji)
-                        .font(.system(size: 38))
+                        .font(.largeTitle)
+                        .dynamicTypeSize(.small ... .accessibility2)
                         .offset(y: 10)
                 }
                 .padding(.top, 22)
@@ -33,21 +34,29 @@ struct PetGlanceView: View {
 
                 // Big numeric value
                 Text("\(max(viewModel.hrvMs, viewModel.bpm))")
-                    .font(.system(size: 38, weight: .bold, design: .rounded))
+                    .font(.largeTitle.weight(.bold))
                     .foregroundStyle(.white)
                     .padding(.top, -12)
+                    .dynamicTypeSize(.small ... .accessibility2)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel("Current Reading")
+                    .accessibilityValue("\(max(viewModel.hrvMs, viewModel.bpm))")
 
                 // Rating
                 HStack(spacing: 4) {
                     Text("✨")
-                        .font(.system(size: 12))
+                        .font(.caption2)
                     Text(viewModel.state.label)
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                        .font(.headline.weight(.bold))
                         .foregroundStyle(viewModel.state.headlineColor)
                     Text("✨")
-                        .font(.system(size: 12))
+                        .font(.caption2)
                 }
                 .padding(.top, 2)
+                .dynamicTypeSize(.small ... .accessibility2)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Stress State")
+                .accessibilityValue(viewModel.state.label)
 
                 Spacer(minLength: 0)
             }
@@ -92,10 +101,11 @@ private struct CurvedGaugeCaption: View {
                 let angle = angle(for: index, count: characters.count)
 
                 Text(String(characters[index]))
-                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                    .font(.caption2.weight(.bold))
                     .foregroundStyle(.white.opacity(0.95))
                     .offset(y: -radius)
                     .rotationEffect(.degrees(angle))
+                    .dynamicTypeSize(.small ... .accessibility2)
             }
         }
         .frame(width: 142, height: 142)
