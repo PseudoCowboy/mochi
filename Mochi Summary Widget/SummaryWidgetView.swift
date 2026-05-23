@@ -18,28 +18,26 @@ struct SummaryWidgetView: View {
             smallView
         case .systemMedium:
             mediumView
+        case .accessoryCircular:
+            accessoryCircularView
         default:
             Text("Unsupported Family")
         }
     }
 
     private var smallView: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("TODAY")
+        VStack(alignment: .center, spacing: 4) {
+            Image(systemName: "flame.fill")
+                .font(.title)
+                .foregroundColor(.widgetStressed)
+            Text("\(entry.snapshot.streak)")
+                .font(.system(size: 48, weight: .bold, design: .rounded))
+                .foregroundColor(.widgetStressed)
+                .minimumScaleFactor(0.8)
+            Text("day streak")
                 .font(.caption)
                 .foregroundColor(.secondary)
-                .fontWeight(.bold)
-            
-            VStack(alignment: .leading, spacing: 4) {
-                metricView(value: entry.snapshot.calmMinutes, label: "Calm", color: .widgetCalm, size: 36)
-                metricView(value: entry.snapshot.overMinutes, label: "Over", color: .widgetOver, size: 24)
-            }
-            
-            Spacer(minLength: 0)
-            
-            if entry.snapshot.streak >= 2 {
-                streakBadge
-            }
+                .fontWeight(.medium)
         }
         .padding()
         .containerBackground(for: .widget) {
@@ -62,9 +60,7 @@ struct SummaryWidgetView: View {
                 
                 Spacer(minLength: 0)
                 
-                if entry.snapshot.streak >= 2 {
-                    streakBadge
-                }
+                streakBadge
             }
             
             Spacer(minLength: 0)
@@ -73,6 +69,20 @@ struct SummaryWidgetView: View {
         .containerBackground(for: .widget) {
             Color(UIColor.systemBackground)
         }
+    }
+    
+    private var accessoryCircularView: some View {
+        ZStack {
+            AccessoryWidgetBackground()
+            VStack(spacing: 0) {
+                Image(systemName: "flame.fill")
+                    .font(.caption)
+                Text("\(entry.snapshot.streak)")
+                    .font(.system(.title2, design: .rounded, weight: .bold))
+            }
+            .widgetAccentable()
+        }
+        .containerBackground(.fill.tertiary, for: .widget)
     }
 
     private func metricView(value: Int, label: String, color: Color, size: CGFloat) -> some View {

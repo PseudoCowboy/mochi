@@ -9,7 +9,7 @@ struct MochiSummaryWidget: Widget {
             SummaryWidgetView(entry: entry)
         }
         .configurationDisplayName("Daily Calm")
-        .description("Your daily summary of calm and over minutes.")
-        .supportedFamilies([.systemSmall, .systemMedium])
+        .description("Your daily summary of calm and over minutes, and current streak.")
+        .supportedFamilies([.systemSmall, .systemMedium, .accessoryCircular])
     }
 }
