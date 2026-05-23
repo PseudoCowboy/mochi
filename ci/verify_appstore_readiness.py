@@ -38,7 +38,6 @@ WATCH_ACCESSIBILITY_FILES = (
     Path("Mochi Watch App/Views/StressGaugeView.swift"),
     Path("Mochi Watch App/Views/SummaryView.swift"),
     Path("Mochi Watch App/Views/SettingsView.swift"),
-    Path("Mochi Watch App/Views/MetricRow.swift"),
     Path("Mochi Complication/StressPetComplicationView.swift"),
 )
 
@@ -53,45 +52,39 @@ OPTIONAL_ARCHIVES = (
 
 BRAND_PRIMARY_HEX = "#FF9F7A"
 
-# iOS universal entries cover iPhone + iPad in this project; iPhone-specific
-# notification/settings/spotlight/app entries are still accepted for future
-# migration, but the App Store-readiness pass requires this universal matrix.
+# Required iOS entries follow Apple's AppIcon matrix. The target may still be a
+# universal iOS app; these idioms describe icon slots, not target families.
 IOS_REQUIRED_COMBOS = tuple(
-    {"idiom": "universal", "size": size, "scale": scale}
-    for size, scales in (
-        ("20x20", ("1x", "2x", "3x")),
-        ("29x29", ("1x", "2x", "3x")),
-        ("40x40", ("1x", "2x", "3x")),
-        ("60x60", ("2x", "3x")),
-        ("76x76", ("1x", "2x")),
-        ("83.5x83.5", ("2x",)),
-        ("1024x1024", ("1x",)),
+    {"idiom": idiom, "size": size, "scale": scale}
+    for idiom, size, scales in (
+        ("iphone", "20x20", ("2x", "3x")),
+        ("iphone", "29x29", ("2x", "3x")),
+        ("iphone", "40x40", ("2x", "3x")),
+        ("iphone", "60x60", ("2x", "3x")),
+        ("ipad", "20x20", ("1x", "2x")),
+        ("ipad", "29x29", ("1x", "2x")),
+        ("ipad", "40x40", ("1x", "2x")),
+        ("ipad", "76x76", ("1x", "2x")),
+        ("ipad", "83.5x83.5", ("2x",)),
     )
     for scale in scales
+) + (
+    {"idiom": "ios-marketing", "size": "1024x1024", "scale": "1x"},
 )
 IOS_ALLOWED_IDIOMS = {"iphone", "ipad", "ios-marketing", "universal"}
 
 WATCH_REQUIRED_COMBOS = (
     {"idiom": "watch", "role": "notificationCenter", "subtype": "38mm", "size": "24x24", "scale": "2x"},
-    {"idiom": "watch", "role": "notificationCenter", "subtype": "40mm", "size": "27.5x27.5", "scale": "2x"},
-    {"idiom": "watch", "role": "notificationCenter", "subtype": "41mm", "size": "29x29", "scale": "2x"},
     {"idiom": "watch", "role": "notificationCenter", "subtype": "42mm", "size": "27.5x27.5", "scale": "2x"},
-    {"idiom": "watch", "role": "notificationCenter", "subtype": "44mm", "size": "29x29", "scale": "2x"},
-    {"idiom": "watch", "role": "notificationCenter", "subtype": "45mm", "size": "29x29", "scale": "2x"},
+    {"idiom": "watch", "role": "notificationCenter", "subtype": "45mm", "size": "33x33", "scale": "2x"},
     {"idiom": "watch", "role": "companionSettings", "size": "29x29", "scale": "2x"},
     {"idiom": "watch", "role": "companionSettings", "size": "29x29", "scale": "3x"},
     {"idiom": "watch", "role": "appLauncher", "subtype": "38mm", "size": "40x40", "scale": "2x"},
     {"idiom": "watch", "role": "appLauncher", "subtype": "40mm", "size": "44x44", "scale": "2x"},
-    {"idiom": "watch", "role": "appLauncher", "subtype": "41mm", "size": "50x50", "scale": "2x"},
-    {"idiom": "watch", "role": "appLauncher", "subtype": "42mm", "size": "44x44", "scale": "2x"},
     {"idiom": "watch", "role": "appLauncher", "subtype": "44mm", "size": "50x50", "scale": "2x"},
-    {"idiom": "watch", "role": "appLauncher", "subtype": "45mm", "size": "50x50", "scale": "2x"},
     {"idiom": "watch", "role": "quickLook", "subtype": "38mm", "size": "86x86", "scale": "2x"},
-    {"idiom": "watch", "role": "quickLook", "subtype": "40mm", "size": "98x98", "scale": "2x"},
-    {"idiom": "watch", "role": "quickLook", "subtype": "41mm", "size": "108x108", "scale": "2x"},
     {"idiom": "watch", "role": "quickLook", "subtype": "42mm", "size": "98x98", "scale": "2x"},
     {"idiom": "watch", "role": "quickLook", "subtype": "44mm", "size": "108x108", "scale": "2x"},
-    {"idiom": "watch", "role": "quickLook", "subtype": "45mm", "size": "108x108", "scale": "2x"},
     {"idiom": "watch-marketing", "size": "1024x1024", "scale": "1x"},
 )
 
@@ -266,6 +259,25 @@ def combo_matches(entry: dict, combo: dict[str, str]) -> bool:
     return all(entry.get(key) == value for key, value in combo.items())
 
 
+def ios_combo_matches(entry: dict, combo: dict[str, str]) -> bool:
+    if combo_matches(entry, combo):
+        return True
+    if combo.get("idiom") in {"iphone", "ipad"}:
+        return (
+            entry.get("idiom") == "universal"
+            and entry.get("size") == combo.get("size")
+            and entry.get("scale") == combo.get("scale")
+        )
+    if combo.get("idiom") == "ios-marketing":
+        return (
+            entry.get("idiom") in {"ios-marketing", "universal"}
+            and entry.get("size") == "1024x1024"
+            and entry.get("scale", "1x") == "1x"
+            and entry.get("filename")
+        )
+    return False
+
+
 def combo_label(combo: dict[str, str]) -> str:
     return ", ".join(f"{key}={value}" for key, value in combo.items())
 
@@ -357,7 +369,7 @@ def validate_ios_app_icon(reporter: Reporter) -> None:
     default_images = [image for image in images if "appearances" not in image]
     validate_filename_resolution(IOS_APPICON, images, reporter, "iOS")
 
-    missing = [combo_label(combo) for combo in IOS_REQUIRED_COMBOS if not any(combo_matches(image, combo) for image in default_images)]
+    missing = [combo_label(combo) for combo in IOS_REQUIRED_COMBOS if not any(ios_combo_matches(image, combo) for image in default_images)]
     if missing:
         reporter.fail(f"iOS AppIcon is missing required default entries: {'; '.join(missing)}")
     else:

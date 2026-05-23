@@ -7,12 +7,10 @@ Manual checklist emitted: yes
 
 ## Failures
 
-- iOS AppIcon is missing required default entries: idiom=universal, size=20x20, scale=1x; idiom=universal, size=20x20, scale=2x; idiom=universal, size=20x20, scale=3x; idiom=universal, size=29x29, scale=1x; idiom=universal, size=29x29, scale=2x; idiom=universal, size=29x29, scale=3x; idiom=universal, size=40x40, scale=1x; idiom=universal, size=40x40, scale=2x; idiom=universal, size=40x40, scale=3x; idiom=universal, size=60x60, scale=2x; idiom=universal, size=60x60, scale=3x; idiom=universal, size=76x76, scale=1x; idiom=universal, size=76x76, scale=2x; idiom=universal, size=83.5x83.5, scale=2x; idiom=universal, size=1024x1024, scale=1x
-- watchOS AppIcon is missing required entries: idiom=watch, role=notificationCenter, subtype=40mm, size=27.5x27.5, scale=2x; idiom=watch, role=notificationCenter, subtype=41mm, size=29x29, scale=2x; idiom=watch, role=notificationCenter, subtype=44mm, size=29x29, scale=2x; idiom=watch, role=notificationCenter, subtype=45mm, size=29x29, scale=2x; idiom=watch, role=appLauncher, subtype=41mm, size=50x50, scale=2x; idiom=watch, role=appLauncher, subtype=42mm, size=44x44, scale=2x; idiom=watch, role=appLauncher, subtype=45mm, size=50x50, scale=2x; idiom=watch, role=quickLook, subtype=40mm, size=98x98, scale=2x; idiom=watch, role=quickLook, subtype=41mm, size=108x108, scale=2x; idiom=watch, role=quickLook, subtype=45mm, size=108x108, scale=2x
+- iOS AppIcon is missing required default entries: idiom=ipad, size=20x20, scale=1x; idiom=ipad, size=20x20, scale=2x; idiom=ipad, size=29x29, scale=1x; idiom=ipad, size=29x29, scale=2x; idiom=ipad, size=40x40, scale=1x; idiom=ipad, size=40x40, scale=2x; idiom=ipad, size=76x76, scale=1x
 - Mochi iOS build settings must wire INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen
 - Mochi iOS target must include LaunchScreen.storyboard in resources
 - SummaryView must add rotor/scroll accessibility affordance for paged pages
-- Dynamic Type audit still has fixed system sizes: Mochi Watch App/Views/MetricRow.swift:11: .font(.system(size: 8, weight: .bold)); Mochi Watch App/Views/MetricRow.swift:14: .font(.system(size: 14, weight: .bold, design: .rounded)); Mochi Watch App/Views/MetricRow.swift:24: .font(.system(size: 8, weight: .bold)); Mochi Watch App/Views/MetricRow.swift:28: .font(.system(size: 14, weight: .bold, design: .rounded)); Mochi Watch App/Views/MetricRow.swift:31: .font(.system(size: 8, weight: .semibold))
 
 ## Warnings
 
