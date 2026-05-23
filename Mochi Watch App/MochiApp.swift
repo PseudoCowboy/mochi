@@ -15,8 +15,10 @@ struct Mochi_Watch_AppApp: App {
     @State private var heartRateService: HeartRateService
     @State private var viewModel: PetViewModel
     @State private var stressNotifier: StressNotifier
+    @State private var overSustainTracker: OverSustainTracker
     @State private var onboarding = OnboardingState()
     @State private var breathPresenter = BreathPresenter()
+    @AppStorage(.breathAutoTriggerEnabledKey) private var autoTriggerEnabled = true
     private let modelContainer: ModelContainer
 
     init() {
@@ -27,8 +29,27 @@ struct Mochi_Watch_AppApp: App {
         let presenter = BreathPresenter()
         _breathPresenter = State(wrappedValue: presenter)
         _stressNotifier = State(wrappedValue: StressNotifier(viewModel: vm, onOver: { [presenter] in
-            presenter.trigger()
+            presenter.trigger(config: .manualDefault)
         }))
+        let onboardingState = OnboardingState()
+        _onboarding = State(wrappedValue: onboardingState)
+
+        // We capture presenter by reference since it's a class
+        let tracker = OverSustainTracker(
+            viewModel: vm,
+            isEnabled: { 
+                let ud = UserDefaults.standard
+                if ud.object(forKey: .breathAutoTriggerEnabledKey) == nil { return true }
+                return ud.bool(forKey: .breathAutoTriggerEnabledKey)
+            },
+            onSustainedOver: { [presenter, onboardingState, hr] in
+                let isOnboardingPresented = !onboardingState.didCompleteOnboarding && hr.authorizationStatus == .notDetermined
+                guard !isOnboardingPresented else { return }
+                guard !presenter.shouldPresentBreath else { return }
+                presenter.trigger(config: .autoRecovery)
+            }
+        )
+        _overSustainTracker = State(wrappedValue: tracker)
 
         let container: ModelContainer
         do {
@@ -66,7 +87,7 @@ struct Mochi_Watch_AppApp: App {
                     get: { breathPresenter.shouldPresentBreath && !isOnboardingPresented },
                     set: { newValue in breathPresenter.shouldPresentBreath = newValue }
                 )) {
-                    BreathView(viewState: BreathSessionViewState())
+                    BreathView(viewState: BreathSessionViewState(config: breathPresenter.pendingConfig))
                         .environment(breathPresenter)
                 }
                 .task {
@@ -74,6 +95,7 @@ struct Mochi_Watch_AppApp: App {
                     heartRateService.start()
                     await stressNotifier.requestAuthorization()
                     stressNotifier.start()
+                    overSustainTracker.start()
                 }
         }
         .onChange(of: scenePhase) { oldPhase, newPhase in
