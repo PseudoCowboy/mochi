@@ -86,7 +86,7 @@ struct BreathView: View {
     private func updateAnimation(for phase: BreathPhase) {
         switch phase {
         case .inhale:
-            withAnimation(.easeInOut(duration: 4.0)) {
+            withAnimation(.easeInOut(duration: Double(viewState.inhaleSeconds))) {
                 circleScale = 1.0
             }
         case .hold:
@@ -94,7 +94,7 @@ struct BreathView: View {
                 circleScale = 1.0
             }
         case .exhale:
-            withAnimation(.easeInOut(duration: 8.0)) {
+            withAnimation(.easeInOut(duration: Double(viewState.exhaleSeconds))) {
                 circleScale = 0.6
             }
         case .idle, .done:

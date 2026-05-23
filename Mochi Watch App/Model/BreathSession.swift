@@ -16,9 +16,15 @@ final class BreathSessionViewState {
     var remainingSeconds: Int = 0
     var cycleIndex: Int = 0
     var totalCycles: Int = 3
+    var inhaleSeconds: Int = 4
+    var holdSeconds: Int = 7
+    var exhaleSeconds: Int = 8
 
-    init(totalCycles: Int = 3) {
-        self.totalCycles = totalCycles
+    init(config: BreathConfig = .manualDefault) {
+        self.totalCycles = config.totalCycles
+        self.inhaleSeconds = config.inhaleSeconds
+        self.holdSeconds = config.holdSeconds
+        self.exhaleSeconds = config.exhaleSeconds
     }
 }
 
@@ -32,17 +38,13 @@ actor BreathSession {
     private var stopped: Bool = false
 
     init(
-        totalCycles: Int = 3,
-        inhaleSeconds: Int = 4,
-        holdSeconds: Int = 7,
-        exhaleSeconds: Int = 8,
         tickDuration: Duration = .seconds(1),
         state: BreathSessionViewState
     ) {
-        self.totalCycles = totalCycles
-        self.inhaleSeconds = inhaleSeconds
-        self.holdSeconds = holdSeconds
-        self.exhaleSeconds = exhaleSeconds
+        self.totalCycles = state.totalCycles
+        self.inhaleSeconds = state.inhaleSeconds
+        self.holdSeconds = state.holdSeconds
+        self.exhaleSeconds = state.exhaleSeconds
         self.tickDuration = tickDuration
         self.state = state
     }

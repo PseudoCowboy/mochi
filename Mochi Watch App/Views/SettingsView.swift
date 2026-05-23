@@ -3,9 +3,17 @@ import HealthKit
 
 struct SettingsView: View {
     @Environment(HeartRateService.self) private var heartRate
+    @AppStorage(.breathAutoTriggerEnabledKey) private var autoTriggerEnabled = true
     
     var body: some View {
         List {
+            Section("Coaching") {
+                Toggle("Auto breath prompts", isOn: $autoTriggerEnabled)
+                Text("Open a 60-second breath when you've been overwhelmed for a while.")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+            
             Section("Permissions") {
                 Button(action: {
                     Task {
