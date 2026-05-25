@@ -5,7 +5,13 @@ final class BreathSessionTests: XCTestCase {
 
     func testInitDefaultsPreserveProductionFourSevenEightPattern() {
         let state = BreathSessionViewState()
-        let session = BreathSession(state: state)
+        let session = BreathSession(
+            totalCycles: state.totalCycles,
+            inhaleSeconds: state.inhaleSeconds,
+            holdSeconds: state.holdSeconds,
+            exhaleSeconds: state.exhaleSeconds,
+            state: state
+        )
 
         XCTAssertEqual(session.inhaleSeconds, 4)
         XCTAssertEqual(session.holdSeconds, 7)

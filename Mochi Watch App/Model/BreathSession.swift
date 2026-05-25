@@ -38,13 +38,17 @@ actor BreathSession {
     private var stopped: Bool = false
 
     init(
+        totalCycles: Int,
+        inhaleSeconds: Int,
+        holdSeconds: Int,
+        exhaleSeconds: Int,
         tickDuration: Duration = .seconds(1),
         state: BreathSessionViewState
     ) {
-        self.totalCycles = state.totalCycles
-        self.inhaleSeconds = state.inhaleSeconds
-        self.holdSeconds = state.holdSeconds
-        self.exhaleSeconds = state.exhaleSeconds
+        self.totalCycles = totalCycles
+        self.inhaleSeconds = inhaleSeconds
+        self.holdSeconds = holdSeconds
+        self.exhaleSeconds = exhaleSeconds
         self.tickDuration = tickDuration
         self.state = state
     }
