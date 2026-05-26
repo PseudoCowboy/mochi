@@ -5,13 +5,13 @@ final class BreathSessionTests: XCTestCase {
 
     func testInitDefaultsPreserveProductionFourSevenEightPattern() {
         let state = BreathSessionViewState()
-        let session = BreathSession(
-            totalCycles: state.totalCycles,
+        let cfg = BreathConfig(
             inhaleSeconds: state.inhaleSeconds,
             holdSeconds: state.holdSeconds,
             exhaleSeconds: state.exhaleSeconds,
-            state: state
+            totalCycles: state.totalCycles
         )
+        let session = BreathSession(config: cfg, state: state)
 
         XCTAssertEqual(session.inhaleSeconds, 4)
         XCTAssertEqual(session.holdSeconds, 7)
@@ -20,12 +20,10 @@ final class BreathSessionTests: XCTestCase {
 
     func testStartDrivesPhasesThroughCycleAndEndsInDone() async {
         let state = BreathSessionViewState()
+        let cfg = BreathConfig(inhaleSeconds: 1, holdSeconds: 1, exhaleSeconds: 1, totalCycles: 1)
         let session = BreathSession(
-            totalCycles: 1,
-            inhaleSeconds: 1,
-            holdSeconds: 1,
-            exhaleSeconds: 1,
             tickDuration: .milliseconds(5),
+            config: cfg,
             state: state
         )
 
@@ -38,12 +36,10 @@ final class BreathSessionTests: XCTestCase {
 
     func testStartIteratesEachConfiguredCycleIndex() async {
         let state = BreathSessionViewState()
+        let cfg = BreathConfig(inhaleSeconds: 1, holdSeconds: 1, exhaleSeconds: 1, totalCycles: 3)
         let session = BreathSession(
-            totalCycles: 3,
-            inhaleSeconds: 1,
-            holdSeconds: 1,
-            exhaleSeconds: 1,
             tickDuration: .milliseconds(2),
+            config: cfg,
             state: state
         )
 
@@ -55,12 +51,10 @@ final class BreathSessionTests: XCTestCase {
 
     func testEndStopsSessionEarlyAndStillFinalizesToDone() async {
         let state = BreathSessionViewState()
+        let cfg = BreathConfig(inhaleSeconds: 10, holdSeconds: 10, exhaleSeconds: 10, totalCycles: 5)
         let session = BreathSession(
-            totalCycles: 5,
-            inhaleSeconds: 10,
-            holdSeconds: 10,
-            exhaleSeconds: 10,
             tickDuration: .milliseconds(5),
+            config: cfg,
             state: state
         )
 

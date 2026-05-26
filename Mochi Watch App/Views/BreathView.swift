@@ -61,13 +61,13 @@ struct BreathView: View {
             }
         }
         .task {
-            let newSession = BreathSession(
-                totalCycles: viewState.totalCycles,
+            let cfg = BreathConfig(
                 inhaleSeconds: viewState.inhaleSeconds,
                 holdSeconds: viewState.holdSeconds,
                 exhaleSeconds: viewState.exhaleSeconds,
-                state: viewState
+                totalCycles: viewState.totalCycles
             )
+            let newSession = BreathSession(config: cfg, state: viewState)
             session = newSession
             await newSession.start()
         }
