@@ -87,7 +87,10 @@ struct Mochi_Watch_AppApp: App {
                     get: { breathPresenter.shouldPresentBreath && !isOnboardingPresented },
                     set: { newValue in breathPresenter.shouldPresentBreath = newValue }
                 )) {
-                    BreathView(viewState: BreathSessionViewState(config: breathPresenter.pendingConfig))
+                    BreathView(
+                        config: breathPresenter.pendingConfig,
+                        viewState: BreathSessionViewState(config: breathPresenter.pendingConfig)
+                    )
                         .environment(breathPresenter)
                 }
                 .task {

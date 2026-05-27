@@ -55,13 +55,16 @@ final class BreathSessionTests: XCTestCase {
 
     func testEndStopsSessionEarlyAndStillFinalizesToDone() async {
         let state = BreathSessionViewState()
-        let session = BreathSession(
-            totalCycles: 5,
+        let config = BreathConfig(
             inhaleSeconds: 10,
             holdSeconds: 10,
             exhaleSeconds: 10,
-            tickDuration: .milliseconds(5),
-            state: state
+            totalCycles: 5
+        )
+        let session = BreathSession(
+            config: config,
+            state: state,
+            tickDuration: .milliseconds(5)
         )
 
         let runner = Task { await session.start() }
