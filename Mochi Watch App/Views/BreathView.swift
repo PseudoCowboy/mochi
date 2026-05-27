@@ -6,11 +6,13 @@ struct BreathView: View {
     
     @State private var viewState: BreathSessionViewState
     @State private var session: BreathSession?
+    @State private var config: BreathConfig
     @State private var circleScale: CGFloat = 0.6
-    
+
     private let autoStart: Bool
 
-    init(viewState: BreathSessionViewState, autoStart: Bool = true) {
+    init(config: BreathConfig, viewState: BreathSessionViewState, autoStart: Bool = true) {
+        self._config = State(initialValue: config)
         self._viewState = State(initialValue: viewState)
         self.autoStart = autoStart
     }
@@ -63,7 +65,7 @@ struct BreathView: View {
             }
         }
         .task {
-            let newSession = BreathSession(state: viewState)
+            let newSession = BreathSession(config: config, state: viewState)
             session = newSession
             await newSession.start()
         }

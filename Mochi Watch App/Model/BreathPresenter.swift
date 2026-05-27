@@ -1,7 +1,7 @@
 import Foundation
 import Observation
 
-struct BreathConfig: Equatable {
+struct BreathConfig: Equatable, Sendable {
     let inhaleSeconds: Int
     let holdSeconds: Int
     let exhaleSeconds: Int
