@@ -17,27 +17,60 @@ struct BreathView: View {
     
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
-            
+            RadialGradient(colors: [Color.growCalmBlue.opacity(0.35), .black],
+                           center: .center, startRadius: 8, endRadius: 220)
+                .ignoresSafeArea()
+
             VStack {
                 Spacer()
-                
+
                 ZStack {
+                    // Outer glow
                     Circle()
-                        .fill(Color.calm)
+                        .fill(Color.growCalmBlue.opacity(0.45))
+                        .blur(radius: 22)
+                        .scaleEffect(circleScale * 1.05)
+                        .frame(width: 140, height: 140)
+
+                    // Liquid Glass orb
+                    Circle()
+                        .fill(.ultraThinMaterial)
+                        .overlay(
+                            Circle().fill(
+                                RadialGradient(
+                                    colors: [Color.growSkyBlue.opacity(0.65),
+                                             Color.growCalmBlue.opacity(0.15)],
+                                    center: UnitPoint(x: 0.35, y: 0.3),
+                                    startRadius: 2,
+                                    endRadius: 90
+                                )
+                            )
+                        )
+                        .overlay(
+                            Circle().stroke(Color.white.opacity(0.35), lineWidth: 0.8)
+                        )
+                        .overlay(
+                            // Specular highlight
+                            Ellipse()
+                                .fill(Color.white.opacity(0.35))
+                                .frame(width: 38, height: 14)
+                                .offset(x: -18, y: -32)
+                                .blur(radius: 4)
+                        )
+                        .shadow(color: Color.growCalmBlue.opacity(0.6), radius: 14)
                         .scaleEffect(circleScale)
                         .frame(width: 140, height: 140)
-                    
+
                     VStack(spacing: 4) {
                         Text(phaseText)
-                            .font(.title3.weight(.bold))
+                            .font(.system(.title3, design: .rounded).weight(.bold))
                             .foregroundColor(.white)
                             .multilineTextAlignment(.center)
-                        
+
                         if viewState.remainingSeconds > 0 {
                             Text("\(viewState.remainingSeconds)")
-                                .font(.headline.weight(.semibold))
-                                .foregroundColor(.white.opacity(0.8))
+                                .font(.system(.headline, design: .rounded).weight(.semibold))
+                                .foregroundColor(.white.opacity(0.85))
                         }
                     }
                     .dynamicTypeSize(.small ... .accessibility2)
@@ -46,19 +79,19 @@ struct BreathView: View {
                 .accessibilityLabel("Breathing guide")
                 .accessibilityValue("\(phaseText), \(viewState.remainingSeconds) seconds remaining")
                 .accessibilityAddTraits(.updatesFrequently)
-                
+
                 Spacer()
-                
+
                 Button("Done") {
                     Task {
                         await session?.end()
                         dismiss()
                     }
                 }
-                .font(.footnote.weight(.semibold))
+                .font(.system(.footnote, design: .rounded).weight(.semibold))
                 .dynamicTypeSize(.small ... .accessibility2)
                 .buttonStyle(.bordered)
-                .tint(Color.muted)
+                .tint(Color.growCalmBlue)
                 .padding(.bottom, 8)
             }
         }

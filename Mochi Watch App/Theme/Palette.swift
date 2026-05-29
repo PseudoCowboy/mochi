@@ -17,4 +17,34 @@ extension Color {
     static let ink = Color(white: 0.15)                             // var(--ink)
     static let muted = Color(white: 0.45)                           // var(--muted)
     static let border = Color(white: 0.85)                          // var(--border)
+
+    // Grow-style restyle palette (calm-blue ↔ warm-amber)
+    static let growCalmBlue = Color(red: 0.42, green: 0.69, blue: 0.93)
+    static let growSkyBlue  = Color(red: 0.58, green: 0.81, blue: 0.97)
+    static let growAmber    = Color(red: 0.99, green: 0.74, blue: 0.31)
+    static let growSun      = Color(red: 1.00, green: 0.83, blue: 0.40)
+    static let growEmber    = Color(red: 0.97, green: 0.46, blue: 0.30)
+}
+
+extension StressState {
+    /// Grow-style tint that shifts calm-blue → warm-amber based on state.
+    var growTint: Color {
+        switch self {
+        case .calm:     return .growCalmBlue
+        case .okay:     return .growSkyBlue
+        case .stressed: return .growAmber
+        case .over:     return .growEmber
+        }
+    }
+
+    var growGradient: LinearGradient {
+        let colors: [Color]
+        switch self {
+        case .calm:     colors = [.growSkyBlue, .growCalmBlue]
+        case .okay:     colors = [.growSkyBlue, .growSun]
+        case .stressed: colors = [.growSun, .growAmber]
+        case .over:     colors = [.growAmber, .growEmber]
+        }
+        return LinearGradient(colors: colors, startPoint: .top, endPoint: .bottom)
+    }
 }

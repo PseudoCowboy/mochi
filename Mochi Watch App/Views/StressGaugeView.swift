@@ -33,7 +33,9 @@ struct StressGaugeView: View {
                 }
                 .stroke(
                     AngularGradient(
-                        gradient: Gradient(colors: [.calm, .okay, .stressed, .over]),
+                        gradient: Gradient(colors: [
+                            .growCalmBlue, .growSkyBlue, .growSun, .growAmber, .growEmber
+                        ]),
                         center: .center,
                         startAngle: startAngle,
                         endAngle: endAngle
