@@ -9,14 +9,17 @@ struct CloudMascotView: View {
     var fallbackEmoji: String? = nil
 
     @State private var breathe = false
+    @State private var drift = false
 
     var body: some View {
         ZStack {
-            // Soft outer glow that color-matches state
+            // Soft outer glow that color-matches state and drifts subtly
             Circle()
-                .fill(state.growTint.opacity(0.35))
-                .blur(radius: 14)
-                .scaleEffect(breathe ? 1.05 : 0.98)
+                .fill(state.growTint.opacity(0.40))
+                .blur(radius: 16)
+                .scaleEffect(breathe ? 1.08 : 0.96)
+                .offset(x: drift ? 3 : -3, y: drift ? -2 : 2)
+                .animation(.easeInOut(duration: 6).repeatForever(autoreverses: true), value: drift)
 
             // Cloud body
             CloudShape()
@@ -46,7 +49,7 @@ struct CloudMascotView: View {
         .frame(width: 92, height: 64)
         .scaleEffect(breathe ? 1.04 : 1.0)
         .animation(.easeInOut(duration: 4).repeatForever(autoreverses: true), value: breathe)
-        .onAppear { breathe = true }
+        .onAppear { breathe = true; drift = true }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Mochi mascot")
         .accessibilityValue(state.label)

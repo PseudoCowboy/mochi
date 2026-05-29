@@ -11,7 +11,7 @@ struct PetGlanceView: View {
     @State private var crownValue: Double = 0.0
 
     private var hrvCaption: String {
-        "Last HRV · \(viewModel.hrvMs)ms · 15m ago"
+        "HRV \(viewModel.hrvMs)ms · 15m"
     }
 
     var body: some View {
@@ -137,12 +137,13 @@ private struct CurvedGaugeCaption: View {
             ForEach(characters.indices, id: \.self) { index in
                 let angle = angle(for: index, count: characters.count)
 
-                Text(String(characters[index]))
-                    .font(.system(.caption2, design: .rounded).weight(.bold))
-                    .foregroundStyle(tint.opacity(0.95))
-                    .offset(y: -radius)
-                    .rotationEffect(.degrees(angle))
-                    .dynamicTypeSize(.small ... .accessibility2)
+                    Text(String(characters[index]))
+                        .font(.system(.caption2, design: .rounded).weight(.bold))
+                        .foregroundStyle(.white)
+                        .shadow(color: tint.opacity(0.7), radius: 2)
+                        .offset(y: -radius)
+                        .rotationEffect(.degrees(angle))
+                        .dynamicTypeSize(.small ... .accessibility2)
             }
         }
         .frame(width: 142, height: 142)

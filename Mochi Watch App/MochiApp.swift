@@ -96,6 +96,9 @@ struct Mochi_Watch_AppApp: App {
                     await stressNotifier.requestAuthorization()
                     stressNotifier.start()
                     overSustainTracker.start()
+                    if CommandLine.arguments.contains("-mochiShowBreath") {
+                        breathPresenter.trigger(config: .autoRecovery)
+                    }
                 }
         }
         .onChange(of: scenePhase) { oldPhase, newPhase in
