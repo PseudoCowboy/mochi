@@ -91,6 +91,7 @@ struct Mochi_Watch_AppApp: App {
                         .environment(breathPresenter)
                 }
                 .task {
+                    WatchSyncSender.shared.activate()
                     viewModel.attach(context: modelContainer.mainContext)
                     heartRateService.start()
                     await stressNotifier.requestAuthorization()

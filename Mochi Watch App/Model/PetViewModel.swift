@@ -52,7 +52,7 @@ final class PetViewModel {
     @MainActor
     private func persistTransition(to newState: StressState, bpm: Int) {
         guard let ctx = modelContext else { return }
-        let sample = StressSample(date: .now, bpm: bpm, state: newState)
+        let sample = StressSample(date: .now, bpm: bpm, state: newState, syncID: UUID().uuidString)
         ctx.insert(sample)
         do {
             try ctx.save()
@@ -61,6 +61,32 @@ final class PetViewModel {
         }
         WidgetCenter.shared.reloadAllTimelines()
         recomputeMaturity()
+        // Bridge the real watch-measured sample (and refreshed summary) to the
+        // iPhone. App Groups don't cross devices, so WatchConnectivity is the
+        // only path to the iOS dashboard / widget / streak.
+        WatchSyncSender.shared.send(samples: [sample])
+        pushSummaryToPhone(now: sample.date)
+    }
+
+    /// Compute today's calm/over minutes + streak from the watch's own store and
+    /// push them as the last-write-wins "current state" snapshot to the phone.
+    @MainActor
+    private func pushSummaryToPhone(now: Date) {
+        guard let ctx = modelContext else { return }
+        let reader = StressHistoryReader(context: ctx)
+        let calm = (try? reader.calmMinutesToday(now: now)) ?? 0
+        let over = (try? reader.overMinutesToday(now: now)) ?? 0
+        let streak = DailySummaryStore.currentStreak(asOf: now, todayCalm: calm, todayOver: over)
+        let summary = WatchSummaryDTO(
+            calmMinutes: calm,
+            overMinutes: over,
+            streak: streak,
+            currentStateRaw: state.rawValue,
+            petStageRaw: maturity.evolutionStage.rawValue,
+            goalMinutes: 30,
+            asOf: now
+        )
+        WatchSyncSender.shared.send(summary: summary)
     }
 
     @MainActor

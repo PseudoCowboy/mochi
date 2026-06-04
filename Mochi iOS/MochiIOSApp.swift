@@ -15,6 +15,9 @@ struct MochiIOSApp: App {
             fatalError("Failed to create shared container: \(error)")
         }
         SummaryWriter.register(BGTaskScheduler.shared)
+        // Receive real watch-measured data over WatchConnectivity and fold it
+        // into the iPhone's App-Group store (App Groups don't cross devices).
+        PhoneSyncReceiver.shared.activate(container: container)
     }
 
     var body: some Scene {
