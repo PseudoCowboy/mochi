@@ -27,17 +27,31 @@ struct SummaryWidgetView: View {
 
     private var smallView: some View {
         VStack(alignment: .center, spacing: 4) {
-            Image(systemName: "flame.fill")
-                .font(.title)
-                .foregroundColor(.widgetStressed)
-            Text("\(entry.snapshot.streak)")
-                .font(.system(size: 48, weight: .bold, design: .rounded))
-                .foregroundColor(.widgetStressed)
-                .minimumScaleFactor(0.8)
-            Text("day streak")
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .fontWeight(.medium)
+            if entry.snapshot.goalMet {
+                Text("🌤️")
+                    .font(.system(size: 34))
+                Text("Perfect Day")
+                    .font(.system(.subheadline, design: .rounded).weight(.bold))
+                    .foregroundColor(.widgetOkay)
+                Text("\(entry.snapshot.streak) day streak")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+            } else {
+                Image(systemName: "flame.fill")
+                    .font(.title)
+                    .foregroundColor(.widgetStressed)
+                Text("\(entry.snapshot.streak)")
+                    .font(.system(size: 44, weight: .bold, design: .rounded))
+                    .foregroundColor(.widgetStressed)
+                    .minimumScaleFactor(0.8)
+                Text("day streak")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .fontWeight(.medium)
+                Text("\(entry.snapshot.calmMinutes)/\(entry.snapshot.goalMinutes) calm min")
+                    .font(.caption2)
+                    .foregroundColor(.widgetCalm)
+            }
         }
         .padding()
         .containerBackground(for: .widget) {
@@ -48,26 +62,47 @@ struct SummaryWidgetView: View {
     private var mediumView: some View {
         HStack(spacing: 16) {
             VStack(alignment: .leading, spacing: 8) {
-                Text("TODAY")
+                Text(entry.snapshot.goalMet ? "PERFECT DAY 🌤️" : "TODAY")
                     .font(.caption)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(entry.snapshot.goalMet ? .widgetOkay : .secondary)
                     .fontWeight(.bold)
-                
+
                 HStack(spacing: 24) {
                     metricView(value: entry.snapshot.calmMinutes, label: "Calm", color: .widgetCalm, size: 36)
                     metricView(value: entry.snapshot.overMinutes, label: "Over", color: .widgetOver, size: 36)
                 }
-                
+
+                goalBar
+
                 Spacer(minLength: 0)
-                
+
                 streakBadge
             }
-            
+
             Spacer(minLength: 0)
         }
         .padding()
         .containerBackground(for: .widget) {
             Color(UIColor.systemBackground)
+        }
+    }
+
+    private var goalBar: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .fill(Color.widgetCalm.opacity(0.18))
+                    Capsule()
+                        .fill(entry.snapshot.goalMet ? Color.widgetOkay : Color.widgetCalm)
+                        .frame(width: max(4, geo.size.width * entry.snapshot.goalProgress))
+                }
+            }
+            .frame(height: 6)
+
+            Text("\(entry.snapshot.calmMinutes)/\(entry.snapshot.goalMinutes) calm min goal")
+                .font(.caption2)
+                .foregroundColor(.secondary)
         }
     }
     

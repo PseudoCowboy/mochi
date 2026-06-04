@@ -28,6 +28,12 @@ struct MochiIOSApp: App {
                     SummaryWriter.startObservingHeartRate()
                     SummaryWriter.scheduleNext()
                 }
+                .task {
+                    // Re-arm the daily breathe reminder if the user opted in.
+                    if CalmReminderScheduler.isEnabled {
+                        await CalmReminderScheduler.reschedule()
+                    }
+                }
         }
         .modelContainer(container)
     }
