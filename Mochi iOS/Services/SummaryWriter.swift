@@ -157,12 +157,17 @@ enum SummaryWriter {
             return false
         }
 
-        let priorStreak = readExistingStreak()
+        // Persist today's tally and derive the streak from real calm-day data
+        // so the widget streak advances with the new Perfect Day model (rather
+        // than carrying the prior snapshot's streak forward unchanged).
+        DailyMinutesStore.save(calm: calm, over: over, on: now)
+        let streak = DailyMinutesStore.currentStreak(asOf: now)
         let snapshot = SummarySnapshot(
             calmMinutes: calm,
             overMinutes: over,
-            streak: priorStreak,
-            asOf: now
+            streak: streak,
+            asOf: now,
+            goalMinutes: DailyGoal.minutes
         )
 
         return writeSnapshot(snapshot)
@@ -197,16 +202,6 @@ enum SummaryWriter {
             print("[SummaryWriter] write failed: \(error)")
             return false
         }
-    }
-
-    private static func readExistingStreak() -> Int {
-        guard let url = summaryFileURL(),
-              let data = try? Data(contentsOf: url) else {
-            return 0
-        }
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        return (try? decoder.decode(SummarySnapshot.self, from: data).streak) ?? 0
     }
 
     private static func summaryFileURL() -> URL? {
