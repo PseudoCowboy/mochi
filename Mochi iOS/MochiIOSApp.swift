@@ -28,7 +28,6 @@ struct MochiIOSApp: App {
                     didActivateOnce = true
                     let enabled = (UserDefaults.standard.object(forKey: SummaryWriter.defaultsKey) as? Bool) ?? true
                     guard enabled else { return }
-                    SummaryWriter.startObservingHeartRate()
                     SummaryWriter.scheduleNext()
                 }
                 .task {

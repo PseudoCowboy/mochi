@@ -1,6 +1,5 @@
 import Foundation
 import BackgroundTasks
-import HealthKit
 import SwiftData
 
 protocol BGTaskSchedulerProtocol {
@@ -29,9 +28,6 @@ enum SummaryWriter {
     static let summaryFileName = "summary.json"
 
     private static let refreshInterval: TimeInterval = 15 * 60
-
-    private static let healthStore = HKHealthStore()
-    private static var observerQuery: HKObserverQuery?
 
     @discardableResult
     static func register(_ scheduler: BGTaskSchedulerProtocol = BGTaskScheduler.shared) -> Bool {
@@ -91,50 +87,6 @@ enum SummaryWriter {
 
     static func cancelScheduled() {
         BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: bgTaskIdentifier)
-    }
-
-    static func startObservingHeartRate() {
-        guard HKHealthStore.isHealthDataAvailable(),
-              let hrType = HKQuantityType.quantityType(forIdentifier: .heartRate) else {
-            print("[SummaryWriter] HealthKit unavailable; skipping observer")
-            return
-        }
-        guard healthStore.authorizationStatus(for: hrType) == .sharingAuthorized else {
-            print("[SummaryWriter] heartRate not authorized on iOS; observer no-op")
-            return
-        }
-        guard observerQuery == nil else { return }
-
-        let query = HKObserverQuery(sampleType: hrType, predicate: nil) { _, completionHandler, error in
-            if let error = error {
-                print("[SummaryWriter] observer error: \(error)")
-                completionHandler()
-                return
-            }
-            Task { @MainActor in
-                _ = await writeSnapshot()
-                completionHandler()
-            }
-        }
-        observerQuery = query
-        healthStore.execute(query)
-        healthStore.enableBackgroundDelivery(for: hrType, frequency: .immediate) { success, error in
-            if let error = error {
-                print("[SummaryWriter] enableBackgroundDelivery failed: \(error)")
-            } else if !success {
-                print("[SummaryWriter] enableBackgroundDelivery returned false")
-            }
-        }
-    }
-
-    static func stopObservingHeartRate() {
-        if let query = observerQuery {
-            healthStore.stop(query)
-            observerQuery = nil
-        }
-        if let hrType = HKQuantityType.quantityType(forIdentifier: .heartRate) {
-            healthStore.disableBackgroundDelivery(for: hrType) { _, _ in }
-        }
     }
 
     @MainActor

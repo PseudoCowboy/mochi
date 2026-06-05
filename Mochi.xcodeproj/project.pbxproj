@@ -25,7 +25,6 @@
 		AABB00100000000000000001 /* Mochi Watch App/Model/EvolutionStage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB00100000000000000099 /* Mochi Watch App/Model/EvolutionStage.swift */; };
 		AABB00100000000000000002 /* Mochi Watch App/Model/EvolutionStage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB00100000000000000099 /* Mochi Watch App/Model/EvolutionStage.swift */; };
 		AABB00100000000000000003 /* Mochi Watch App/Model/PetMaturity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB00100000000000000098 /* Mochi Watch App/Model/PetMaturity.swift */; };
-		ATL500000000000000000001 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ATL500000000000000000099 /* HealthKit.framework */; };
 		ATL500000000000000000002 /* Shared/SummarySnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEF00000000000000000008 /* Shared/SummarySnapshot.swift */; };
 		5C0000000000000000000002 /* Shared/WatchSyncMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000001 /* Shared/WatchSyncMessage.swift */; };
 		5C0000000000000000000003 /* Shared/WatchSyncMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000001 /* Shared/WatchSyncMessage.swift */; };
@@ -143,7 +142,6 @@
 		AABB00100000000000000098 /* Mochi Watch App/Model/PetMaturity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Mochi Watch App/Model/PetMaturity.swift"; sourceTree = "<group>"; };
 		AABB00100000000000000099 /* Mochi Watch App/Model/EvolutionStage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Mochi Watch App/Model/EvolutionStage.swift"; sourceTree = "<group>"; };
 		AADD00000000000000000002 /* Mochi Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Mochi Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		ATL500000000000000000099 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		BEEF00000000000000000007 /* Mochi Summary Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Mochi Summary Widget.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEEF00000000000000000008 /* Shared/SummarySnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SummarySnapshot.swift; sourceTree = "<group>"; };
 		5C0000000000000000000001 /* Shared/WatchSyncMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/WatchSyncMessage.swift; sourceTree = "<group>"; };
@@ -283,7 +281,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ATL500000000000000000001 /* HealthKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -376,7 +373,6 @@
 				9D6633522F20C940000BD917 /* SwiftUI.framework */,
 				9D6633532F20C940000BD917 /* WidgetKit.framework */,
 				9D6633542F20C940000BD917 /* SwiftData.framework */,
-				ATL500000000000000000099 /* HealthKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -599,9 +595,6 @@
 								enabled = 1;
 							};
 							com.apple.BackgroundModes = {
-								enabled = 1;
-							};
-							com.apple.HealthKit = {
 								enabled = 1;
 							};
 						};
@@ -1146,7 +1139,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_BGTaskSchedulerPermittedIdentifiers = com.pseudocowboy.mochi.summary.refresh;
 				INFOPLIST_KEY_CFBundleDisplayName = Mochi;
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Mochi reads your heart rate so your iPhone summary widget stays in sync with how you feel.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIBackgroundModes = "fetch processing";
@@ -1187,7 +1179,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_BGTaskSchedulerPermittedIdentifiers = com.pseudocowboy.mochi.summary.refresh;
 				INFOPLIST_KEY_CFBundleDisplayName = Mochi;
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Mochi reads your heart rate so your iPhone summary widget stays in sync with how you feel.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIBackgroundModes = "fetch processing";

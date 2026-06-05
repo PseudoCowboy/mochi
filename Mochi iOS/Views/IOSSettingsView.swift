@@ -69,10 +69,8 @@ struct IOSSettingsView: View {
                 .tint(.calm)
                 .onChange(of: bgEnabled) { _, newValue in
                     if newValue {
-                        SummaryWriter.startObservingHeartRate()
                         SummaryWriter.scheduleNext()
                     } else {
-                        SummaryWriter.stopObservingHeartRate()
                         SummaryWriter.cancelScheduled()
                     }
                 }
