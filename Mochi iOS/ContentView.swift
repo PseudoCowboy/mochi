@@ -91,9 +91,15 @@ struct ContentView: View {
     }
 }
 
-/// The original "Last 24 Hours" history list, now its own tab.
+/// The original "Last 24 Hours" history list, now its own tab, with a 30-day
+/// calm-minutes trend and CSV export above the live samples.
 private struct HistoryView: View {
     let samples: [StressSample]
+
+    // The 24h `samples` drive the live list; the monthly trend + CSV need a
+    // wider window, so query 30 days of samples just for those.
+    @Query(sort: \StressSample.date, order: .reverse) private var allSamples: [StressSample]
+    @State private var insights: Insights = .empty
 
     var body: some View {
         VStack(spacing: 0) {
@@ -113,6 +119,9 @@ private struct HistoryView: View {
                 }
                 Spacer()
             } else {
+                MonthlyTrendChart(trend: insights.monthlyTrend, goalMinutes: insights.goalMinutes)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
                 StressHistoryChartView(samples: samples)
                 List(samples) { sample in
                     StressHistoryRow(sample: sample)
@@ -121,5 +130,14 @@ private struct HistoryView: View {
             }
         }
         .navigationTitle("Last 24 Hours")
+        .toolbar {
+            if let csv = CalmMinutesCSV.writeTempFile(from: insights.monthlyTrend) {
+                ShareLink(item: csv) {
+                    Label("Export CSV", systemImage: "square.and.arrow.up")
+                }
+            }
+        }
+        .onAppear { insights = InsightsEngine.compute(from: allSamples) }
+        .onChange(of: allSamples.count) { _, _ in insights = InsightsEngine.compute(from: allSamples) }
     }
 }

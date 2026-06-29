@@ -15,6 +15,7 @@ struct Insights: Equatable {
     var goalMinutes: Int
     var streak: Int
     var weeklyTrend: [DayInsight]     // oldest → newest, 7 entries
+    var monthlyTrend: [DayInsight]    // oldest → newest, 30 entries
     var stage: EvolutionStage
     var nextStage: EvolutionStage?
     var stageProgress: Double         // 0...1 toward next stage
@@ -34,6 +35,7 @@ struct Insights: Equatable {
         goalMinutes: DailyGoal.defaultMinutes,
         streak: 0,
         weeklyTrend: [],
+        monthlyTrend: [],
         stage: .egg,
         nextStage: .baby,
         stageProgress: 0,
@@ -67,19 +69,16 @@ enum InsightsEngine {
         DailyMinutesStore.save(calm: todayCalm, over: todayOver, on: startOfToday, calendar: calendar)
 
         // Weekly trend: 7 days oldest → newest (today last).
-        var trend: [DayInsight] = []
-        for offset in stride(from: 6, through: 0, by: -1) {
-            guard let dayStart = calendar.date(byAdding: .day, value: -offset, to: startOfToday) else { continue }
-            let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart) ?? dayStart
-            let terminal = min(now, dayEnd)
-            let (c, o): (Int, Int)
-            if offset == 0 {
-                (c, o) = (todayCalm, todayOver)
-            } else {
-                (c, o) = minutes(from: sorted, dayStart: dayStart, dayEnd: dayEnd, terminal: terminal)
-            }
-            trend.append(DayInsight(date: dayStart, calmMinutes: c, overMinutes: o))
-        }
+        let trend = dailyTrend(
+            days: 7, from: sorted, startOfToday: startOfToday, now: now,
+            calendar: calendar, today: (todayCalm, todayOver)
+        )
+
+        // Monthly trend: 30 days oldest → newest (today last).
+        let monthly = dailyTrend(
+            days: 30, from: sorted, startOfToday: startOfToday, now: now,
+            calendar: calendar, today: (todayCalm, todayOver)
+        )
 
         let streak = DailyMinutesStore.currentStreak(asOf: now, calendar: calendar)
 
@@ -94,6 +93,7 @@ enum InsightsEngine {
             goalMinutes: goalMinutes,
             streak: streak,
             weeklyTrend: trend,
+            monthlyTrend: monthly,
             stage: stage,
             nextStage: next,
             stageProgress: progress,
@@ -134,6 +134,33 @@ enum InsightsEngine {
         }
 
         return (Int(calmSeconds / 60), Int(overSeconds / 60))
+    }
+
+    /// Builds an oldest → newest trend of `days` `DayInsight`s ending today.
+    /// Mirrors the weekly loop: today reuses the already-tallied minutes, prior
+    /// days re-attribute via `minutes(...)`.
+    private static func dailyTrend(
+        days: Int,
+        from sorted: [StressSample],
+        startOfToday: Date,
+        now: Date,
+        calendar: Calendar,
+        today: (calm: Int, over: Int)
+    ) -> [DayInsight] {
+        var trend: [DayInsight] = []
+        for offset in stride(from: days - 1, through: 0, by: -1) {
+            guard let dayStart = calendar.date(byAdding: .day, value: -offset, to: startOfToday) else { continue }
+            let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart) ?? dayStart
+            let terminal = min(now, dayEnd)
+            let (c, o): (Int, Int)
+            if offset == 0 {
+                (c, o) = today
+            } else {
+                (c, o) = minutes(from: sorted, dayStart: dayStart, dayEnd: dayEnd, terminal: terminal)
+            }
+            trend.append(DayInsight(date: dayStart, calmMinutes: c, overMinutes: o))
+        }
+        return trend
     }
 
     private static func accumulate(state: StressState, seconds: TimeInterval, calm: inout TimeInterval, over: inout TimeInterval) {
