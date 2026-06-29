@@ -14,19 +14,27 @@ enum CalmMinutesCSV {
         return f
     }()
 
-    /// Oldest → newest CSV rows, header first.
+    /// Oldest → newest CSV rows, header first, with a trailing newline.
     static func make(from trend: [DayInsight]) -> String {
         var lines = [header]
         for day in trend {
             lines.append("\(dateFormatter.string(from: day.date)),\(day.calmMinutes),\(day.overMinutes)")
         }
-        return lines.joined(separator: "\n")
+        return lines.joined(separator: "\n") + "\n"
     }
 
-    /// Writes the CSV to a temporary file and returns its URL, or nil on failure.
+    /// Writes the CSV to a date-stamped temp file and returns its URL, or nil on
+    /// failure. The filename carries the range so concurrent exports don't clash
+    /// and stale content is never reused.
     static func writeTempFile(from trend: [DayInsight]) -> URL? {
+        let suffix: String
+        if let first = trend.first?.date, let last = trend.last?.date {
+            suffix = "\(dateFormatter.string(from: first))-\(dateFormatter.string(from: last))"
+        } else {
+            suffix = "empty"
+        }
         let url = FileManager.default.temporaryDirectory
-            .appendingPathComponent("mochi-calm-minutes.csv")
+            .appendingPathComponent("mochi-calm-minutes-\(suffix).csv")
         do {
             try make(from: trend).write(to: url, atomically: true, encoding: .utf8)
             return url

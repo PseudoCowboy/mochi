@@ -9,7 +9,10 @@ final class InsightsEngineMonthlyTrendTests: XCTestCase {
 
     func testMonthlyTrendHasThirtyDaysOldestToNewest() {
         let now = fixedNow()
-        let calendar = Calendar.current
+        // Fixed Gregorian/UTC calendar so day boundaries are deterministic
+        // regardless of the test host's timezone or locale.
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "UTC")!
         // A couple of samples so compute has something to attribute; the trend
         // shape (count + ordering) shouldn't depend on sample volume.
         let samples = [

@@ -97,9 +97,20 @@ private struct HistoryView: View {
     let samples: [StressSample]
 
     // The 24h `samples` drive the live list; the monthly trend + CSV need a
-    // wider window, so query 30 days of samples just for those.
-    @Query(sort: \StressSample.date, order: .reverse) private var allSamples: [StressSample]
+    // wider window, so query 30 days of samples just for those (bounded fetch).
+    @Query private var allSamples: [StressSample]
     @State private var insights: Insights = .empty
+    @State private var exportURL: URL?
+
+    init(samples: [StressSample]) {
+        self.samples = samples
+        let thirtyDaysAgo = Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date()
+        _allSamples = Query(
+            filter: #Predicate<StressSample> { $0.date >= thirtyDaysAgo },
+            sort: \.date,
+            order: .reverse
+        )
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -131,13 +142,20 @@ private struct HistoryView: View {
         }
         .navigationTitle("Last 24 Hours")
         .toolbar {
-            if let csv = CalmMinutesCSV.writeTempFile(from: insights.monthlyTrend) {
-                ShareLink(item: csv) {
+            if let exportURL {
+                ShareLink(item: exportURL) {
                     Label("Export CSV", systemImage: "square.and.arrow.up")
                 }
             }
         }
-        .onAppear { insights = InsightsEngine.compute(from: allSamples) }
-        .onChange(of: allSamples.count) { _, _ in insights = InsightsEngine.compute(from: allSamples) }
+        .onAppear(perform: refresh)
+        .onChange(of: allSamples.count) { _, _ in refresh() }
+    }
+
+    /// Recompute insights and prepare the CSV once per data change — never in
+    /// `body`/`toolbar`, so view re-evaluation can't trigger repeated file I/O.
+    private func refresh() {
+        insights = InsightsEngine.compute(from: allSamples)
+        exportURL = CalmMinutesCSV.writeTempFile(from: insights.monthlyTrend)
     }
 }

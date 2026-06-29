@@ -10,6 +10,7 @@ struct MonthlyTrendChart: View {
 
     private let dayFormatter: DateFormatter = {
         let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US_POSIX")
         f.dateFormat = "M/d"
         return f
     }()
