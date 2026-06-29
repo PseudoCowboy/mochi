@@ -38,6 +38,8 @@ struct MonthlyTrendChart: View {
                             : Color.calm.gradient
                     )
                     .cornerRadius(3)
+                    .accessibilityLabel(dayFormatter.string(from: day.date))
+                    .accessibilityValue("\(day.calmMinutes) calm minutes")
                 }
 
                 if goalMinutes > 0 {
