@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5C0000000000000000000002 /* Shared/WatchSyncMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000001 /* Shared/WatchSyncMessage.swift */; };
+		5C0000000000000000000003 /* Shared/WatchSyncMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000001 /* Shared/WatchSyncMessage.swift */; };
 		9D6633272F20C93C000BD917 /* Mochi Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 9D6633262F20C93C000BD917 /* Mochi Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9D6633402F20C940000BD917 /* Mochi Complication.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 9D66334B2F20C940000BD917 /* Mochi Complication.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9D6633412F20C940000BD917 /* Mochi Watch App/Model/StressSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D66334E2F20C940000BD917 /* Mochi Watch App/Model/StressSample.swift */; };
@@ -26,8 +28,6 @@
 		AABB00100000000000000002 /* Mochi Watch App/Model/EvolutionStage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB00100000000000000099 /* Mochi Watch App/Model/EvolutionStage.swift */; };
 		AABB00100000000000000003 /* Mochi Watch App/Model/PetMaturity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB00100000000000000098 /* Mochi Watch App/Model/PetMaturity.swift */; };
 		ATL500000000000000000002 /* Shared/SummarySnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEF00000000000000000008 /* Shared/SummarySnapshot.swift */; };
-		5C0000000000000000000002 /* Shared/WatchSyncMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000001 /* Shared/WatchSyncMessage.swift */; };
-		5C0000000000000000000003 /* Shared/WatchSyncMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000001 /* Shared/WatchSyncMessage.swift */; };
 		BEEF00000000000000000001 /* Mochi Summary Widget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BEEF00000000000000000007 /* Mochi Summary Widget.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BEEF00000000000000000002 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D6633522F20C940000BD917 /* SwiftUI.framework */; };
 		BEEF00000000000000000003 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D6633532F20C940000BD917 /* WidgetKit.framework */; };
@@ -126,6 +126,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5C0000000000000000000001 /* Shared/WatchSyncMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/WatchSyncMessage.swift; sourceTree = "<group>"; };
 		9D6633192F20C93A000BD917 /* Mochi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mochi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D6633262F20C93C000BD917 /* Mochi Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mochi Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D66334B2F20C940000BD917 /* Mochi Complication.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Mochi Complication.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -144,7 +145,6 @@
 		AADD00000000000000000002 /* Mochi Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Mochi Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEEF00000000000000000007 /* Mochi Summary Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Mochi Summary Widget.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEEF00000000000000000008 /* Shared/SummarySnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SummarySnapshot.swift; sourceTree = "<group>"; };
-		5C0000000000000000000001 /* Shared/WatchSyncMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/WatchSyncMessage.swift; sourceTree = "<group>"; };
 		C0DE7E570000000000000001 /* Mochi iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Mochi iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5A10000000000000000000D /* Fixtures+Breath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Fixtures+Breath.swift"; sourceTree = "<group>"; };
 		E5A10000000000000000000E /* Fixtures+Pet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Fixtures+Pet.swift"; sourceTree = "<group>"; };
@@ -178,6 +178,8 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				.gitkeep,
+				ContentViewBackgroundToggleTests.swift,
+				SummaryWidgetSnapshotTests.swift,
 			);
 			target = C0DE7E570000000000000003 /* Mochi iOSTests */;
 		};
@@ -319,6 +321,7 @@
 				BEEF00000000000000000008 /* Shared/SummarySnapshot.swift */,
 				9DFEEDCC2F20C940000BD917 /* Mochi iOS/PrivacyInfo.xcprivacy */,
 				9DFEEDCE2F20C940000BD917 /* Mochi/Assets.xcassets */,
+				5C0000000000000000000001 /* Shared/WatchSyncMessage.swift */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1023,7 +1026,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1";
+				TARGETED_DEVICE_FAMILY = 1;
 				UILaunchStoryboardName = LaunchScreen;
 			};
 			name = Debug;
@@ -1060,7 +1063,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1";
+				TARGETED_DEVICE_FAMILY = 1;
 				UILaunchStoryboardName = LaunchScreen;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1162,7 +1165,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1";
+				TARGETED_DEVICE_FAMILY = 1;
 				UILaunchStoryboardName = LaunchScreen;
 			};
 			name = Debug;
@@ -1202,7 +1205,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1";
+				TARGETED_DEVICE_FAMILY = 1;
 				UILaunchStoryboardName = LaunchScreen;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1295,7 +1298,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1325,7 +1328,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1";
+				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -1354,7 +1357,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1";
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Mochi iOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Mochi iOS";
 				TEST_TARGET_NAME = "Mochi iOS";
 			};
@@ -1384,7 +1387,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1";
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Mochi iOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Mochi iOS";
 				TEST_TARGET_NAME = "Mochi iOS";
 				VALIDATE_PRODUCT = YES;
